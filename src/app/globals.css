@@ -1,26 +1,92 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Light: from the PDF guide theme */
+  --color-cream: #faf8f3;
+  --color-card: #f1ede2;
+  --color-ink: #111111;
+  --color-body: #2c2c28;
+  --color-soft: #55554f;
+  --color-muted: #6f6f68;
+  --color-green: #1a6b54;
+  --color-deep: #124a3a;
+  --color-mint: #eaf4ef;
+  --color-line: #e5e3db;
+  --color-rule: #d8d5ca;
+  --color-rose: #fbefef;
+  --color-alert: #a33a3a;
+
+  /* Dark: from the Midnight carousel theme */
+  --color-midnight: #0c1712;
+  --color-midnight-2: #13241b;
+  --color-signal: #3ad971;
+  --color-paper: #f2f0e8;
+  --color-dim: #93a798;
+  --color-mist: #c9d4cc;
+  --color-sage: #b9c6bd;
+  --color-leaf: #c2dccf;
+
+  --font-serif: "Lora Variable", Georgia, "Times New Roman", serif;
+  --font-sans: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-body);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-green);
+  outline-offset: 3px;
+}
+
+.on-dark :focus-visible {
+  outline-color: var(--color-signal);
+}
+
+/* Faint topo rings behind the dark sections */
+.topo {
+  background-color: var(--color-midnight);
+  background-image:
+    repeating-radial-gradient(circle at 88% 12%, rgba(58, 217, 113, 0.1) 0 1px, transparent 1px 30px),
+    repeating-radial-gradient(circle at 8% 110%, rgba(58, 217, 113, 0.06) 0 1px, transparent 1px 44px);
+}
+
+.dots {
+  background-image: radial-gradient(rgba(58, 217, 113, 0.35) 1.4px, transparent 1.6px);
+  background-size: 14px 14px;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.kicker {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Guide pages: keep the footer clear of the mobile download bar */
+@media (max-width: 767px) {
+  body:has(.sticky-download) footer {
+    padding-bottom: 6.5rem;
+  }
 }
