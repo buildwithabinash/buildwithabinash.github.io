@@ -28,7 +28,7 @@ export function StickyBar({ pdf, slug, title }: { pdf: string | null; slug: stri
         <a
           href={pdf}
           download={`${slug}-guide-buildwithabinash.pdf`}
-          className="flex h-14 flex-1 items-center justify-center gap-2 rounded-full bg-deep font-semibold text-white"
+          className="btn btn-primary h-14 flex-1"
         >
           <Download size={20} /> Download PDF
         </a>
@@ -41,7 +41,7 @@ export function StickyBar({ pdf, slug, title }: { pdf: string | null; slug: stri
         type="button"
         onClick={share}
         aria-label={copied ? "Link copied" : "Share this guide"}
-        className="flex h-14 w-14 flex-none items-center justify-center rounded-full border border-deep text-deep"
+        className="btn btn-ghost h-14 w-14 flex-none"
       >
         {copied ? <span className="text-xs font-semibold">Copied</span> : <Share size={20} />}
       </button>

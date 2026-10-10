@@ -7,7 +7,7 @@
   --color-ink: #111111;
   --color-body: #2c2c28;
   --color-soft: #55554f;
-  --color-muted: #6f6f68;
+  --color-muted: #686860; /* darkened from #6f6f68: 4.33 failed AA on card surfaces */
   --color-green: #1a6b54;
   --color-deep: #124a3a;
   --color-mint: #eaf4ef;
@@ -51,17 +51,289 @@ body {
   outline-color: var(--color-signal);
 }
 
-/* Faint topo rings behind the dark sections */
+/* ───────────────────────────────────────────────────────────────
+   Dark-section backgrounds.
+
+   No geometry: a green glow off the top right, a deep-teal wash
+   through the middle, and a fine film grain over the top. The grain
+   is what gives it depth, and because it has no repeating structure
+   it never competes with the text sitting on it.
+   ─────────────────────────────────────────────────────────────── */
 .topo {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   background-color: var(--color-midnight);
-  background-image:
-    repeating-radial-gradient(circle at 88% 12%, rgba(58, 217, 113, 0.1) 0 1px, transparent 1px 30px),
-    repeating-radial-gradient(circle at 8% 110%, rgba(58, 217, 113, 0.06) 0 1px, transparent 1px 44px);
 }
 
-.dots {
-  background-image: radial-gradient(rgba(58, 217, 113, 0.35) 1.4px, transparent 1.6px);
-  background-size: 14px 14px;
+.topo::before,
+.topo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.topo::before {
+  background:
+    radial-gradient(46% 62% at 80% -4%, rgba(58, 217, 113, 0.22), transparent 66%),
+    radial-gradient(44% 56% at 6% 108%, rgba(58, 217, 113, 0.1), transparent 62%),
+    radial-gradient(60% 70% at 46% 46%, rgba(18, 74, 58, 0.45), transparent 72%);
+}
+
+.topo::after {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.16;
+}
+
+/* Phones: pull the light up into the band behind the photo and the
+   kicker, so the headline sits on flat midnight. */
+@media (max-width: 767px) {
+  .topo::before {
+    background:
+      radial-gradient(70% 34% at 74% -2%, rgba(58, 217, 113, 0.2), transparent 68%),
+      radial-gradient(80% 26% at 0% 102%, rgba(58, 217, 113, 0.09), transparent 64%),
+      radial-gradient(90% 40% at 50% 46%, rgba(18, 74, 58, 0.4), transparent 74%);
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────
+   Hero: light rays behind the portrait, grain over the top, and the
+   glass chips that sit on it.
+   ─────────────────────────────────────────────────────────────── */
+.hero-spot {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--color-midnight);
+}
+
+/* Grain over the rays, same treatment as the other dark sections. */
+.hero-spot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.16;
+}
+
+/* Keep the light on the portrait side: the copy must sit on flat
+   midnight, not on a lit ray. */
+.beams {
+  -webkit-mask-image: linear-gradient(90deg, transparent 12%, rgba(0, 0, 0, 0.1) 40%, #000 74%);
+  mask-image: linear-gradient(90deg, transparent 12%, rgba(0, 0, 0, 0.1) 40%, #000 74%);
+}
+
+.beam {
+  position: absolute;
+  left: -30%;
+  width: 160%;
+  border-radius: 9999px;
+}
+
+.beam-bloom {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(30% 36% at 70% 52%, rgba(58, 217, 113, 0.16), transparent 70%),
+    radial-gradient(85% 55% at 50% 118%, rgba(12, 23, 18, 0.92), transparent 72%),
+    radial-gradient(60% 50% at 10% 10%, rgba(12, 23, 18, 0.7), transparent 70%);
+}
+
+@keyframes beam-drift {
+  0%,
+  100% {
+    transform: rotate(-8deg) translate3d(-2%, 0, 0);
+    opacity: 0.85;
+  }
+  50% {
+    transform: rotate(-8deg) translate3d(2%, 0, 0);
+    opacity: 1;
+  }
+}
+
+.beam--drift {
+  animation: beam-drift 17s ease-in-out infinite;
+}
+
+/* Glass chips, the badge and the secondary button. */
+.glass {
+  background: rgba(242, 240, 232, 0.06);
+  border: 1px solid rgba(242, 240, 232, 0.14);
+  backdrop-filter: blur(10px);
+}
+
+/* Phones: the layout stacks and the portrait chip sits at the top, so
+   the light belongs up there rather than off to one side. */
+@media (max-width: 767px) {
+  .beams {
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.35) 44%, transparent 82%);
+    mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.35) 44%, transparent 82%);
+  }
+
+  .beam-bloom {
+    background:
+      radial-gradient(46% 20% at 54% 12%, rgba(58, 217, 113, 0.17), transparent 72%),
+      radial-gradient(90% 34% at 50% 108%, rgba(12, 23, 18, 0.9), transparent 74%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beam--drift {
+    animation: none;
+  }
+}
+
+@layer components {
+  /* ───────────────────────────────────────────────────────────────
+     Buttons. One class, two skins: white on the dark sections, the
+     deep-green gradient on cream. Both are glass — gradient fill, a lit
+     top edge, a darker bottom edge, and a sheen that crosses the face
+     on hover. The skin follows .on-dark, so nothing has to opt in.
+     ─────────────────────────────────────────────────────────────── */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    overflow: hidden;
+    border-radius: 9999px;
+    font-weight: 600;
+    white-space: nowrap;
+    isolation: isolate;
+    transition:
+      transform 0.22s ease,
+      box-shadow 0.22s ease,
+      background 0.22s ease,
+      border-color 0.22s ease,
+      color 0.22s ease;
+  }
+
+  /* The sheen: above the fill, below the label. */
+  .btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(104deg, transparent 38%, rgba(255, 255, 255, 0.4) 50%, transparent 62%);
+    transform: translateX(-130%);
+    transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn:hover::after {
+    transform: translateX(130%);
+  }
+  .btn > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Primary, on cream. */
+  .btn-primary {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 58%),
+      linear-gradient(135deg, #2a8d70 0%, var(--color-green) 48%, var(--color-deep) 100%);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      0 10px 26px -12px rgba(18, 74, 58, 0.7);
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.45),
+      0 16px 32px -12px rgba(18, 74, 58, 0.85);
+  }
+
+  /* Primary, on the dark sections: solid white. */
+  .on-dark .btn-primary {
+    background: linear-gradient(180deg, #ffffff, var(--color-paper) 56%, #dcd8cc 100%);
+    color: var(--color-ink);
+    border-color: rgba(255, 255, 255, 0.65);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+      0 10px 30px -10px rgba(0, 0, 0, 0.65);
+  }
+  .on-dark .btn-primary:hover {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+      0 16px 38px -10px rgba(0, 0, 0, 0.75);
+  }
+
+  /* The quiet partner. */
+  .btn-ghost {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.5));
+    border: 1px solid var(--color-rule);
+    color: var(--color-ink);
+    backdrop-filter: blur(14px);
+  }
+  .btn-ghost:hover {
+    transform: translateY(-1px);
+    border-color: var(--color-green);
+  }
+  .on-dark .btn-ghost {
+    background: linear-gradient(180deg, rgba(242, 240, 232, 0.13), rgba(242, 240, 232, 0.04));
+    border-color: rgba(242, 240, 232, 0.18);
+    color: var(--color-paper);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  }
+  .on-dark .btn-ghost:hover {
+    border-color: rgba(242, 240, 232, 0.45);
+  }
+
+  /* The arrow's own disc, for the split layout. */
+  .btn .disc {
+    display: flex;
+    height: 2.25rem;
+    width: 2.25rem;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: #fff;
+    color: var(--color-green);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: transform 0.25s ease;
+  }
+  .on-dark .btn .disc {
+    background: var(--color-midnight);
+    color: var(--color-signal);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  }
+  .btn:hover .disc {
+    transform: translateX(3px);
+  }
+
+  /* A disabled action should not light up or lift. */
+  .btn[aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+  .btn[aria-disabled="true"]:hover {
+    transform: none;
+  }
+  .btn[aria-disabled="true"]:hover::after {
+    transform: translateX(-130%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn,
+    .btn::after,
+    .btn .disc {
+      transition: none;
+    }
+    .btn:hover {
+      transform: none;
+    }
+    .btn:hover::after {
+      transform: translateX(-130%);
+    }
+  }
 }
 
 .no-scrollbar {

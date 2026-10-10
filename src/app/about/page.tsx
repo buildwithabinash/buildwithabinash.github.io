@@ -1,10 +1,28 @@
+import Image from "next/image";
 import type { Metadata } from "next";
-import { disclaimer, site, socials } from "@/lib/site";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbs, graph, personId, siteId } from "@/lib/schema";
+import { disclaimer, ogImage, site, socials } from "@/lib/site";
+
+const description =
+  "Who Abinash is, why @buildwithabinash exists, and the five rules every guide follows. Education, not advice.";
 
 export const metadata: Metadata = {
   title: "About",
-  description:
-    "Who Abinash is, why @buildwithabinash exists, and the five rules every guide follows. Education, not advice.",
+  description,
+  alternates: { canonical: "/about/" },
+  openGraph: { title: "About", description, url: `${site.url}/about/`, images: [ogImage] },
+};
+
+const aboutSchema = {
+  "@type": "AboutPage",
+  "@id": `${site.url}/about/#about`,
+  url: `${site.url}/about/`,
+  name: `About · ${site.name}`,
+  description,
+  inLanguage: "en-IN",
+  isPartOf: { "@id": siteId },
+  mainEntity: { "@id": personId },
 };
 
 const rules = [
@@ -17,28 +35,58 @@ const rules = [
 
 const roadmap = [
   { label: "Now", text: "A new video most days, and a free guide for the ones you ask about." },
-  { label: "Next", text: "Series that build on each other, and simple calculators you can use yourself." },
+  { label: "Next", text: "More guides, and more calculators you can run your own numbers through." },
   { label: "Learning", text: "I'm studying for the NISM Investment Adviser exams (X-A and X-B). Until I'm registered, everything here stays education." },
 ];
 
 export default function AboutPage() {
   return (
     <>
-      <section className="topo on-dark text-paper">
-        <div className="mx-auto flex max-w-6xl flex-col gap-7 px-5 pb-10 pt-8 md:flex-row md:items-center md:gap-14 md:px-6 md:py-20">
-          <div className="flex aspect-[4/3] w-full items-center justify-center rounded-3xl border-2 border-signal bg-midnight-2 text-center text-sm text-dim md:aspect-[4/5] md:w-[340px] md:flex-none">
-            Portrait coming soon
+      <JsonLd
+        data={graph(
+          aboutSchema,
+          breadcrumbs([
+            { name: "Home", path: "/" },
+            { name: "About", path: "/about/" },
+          ]),
+        )}
+      />
+      {/* main carries top padding to clear the fixed header, which would leave
+          a cream strip above this dark section. Pull it back up and re-add the
+          space inside, the same way the home hero does, so the dark runs to the
+          top of the page and the header island sits on it. */}
+      <section className="topo on-dark -mt-[74px] text-paper md:-mt-[88px]">
+        {/* One grid, two shapes. On phones the photo sits left with the kicker
+            and heading to its right, and the body copy runs full width beneath;
+            both scale with the screen so "Hi, I&apos;m Abinash." stays on one line: a
+            fixed photo width starved the column on a 320px phone. The phrase is
+            about 7.5x the font size. Sized in vw, not %, because a percentage
+            width inside an auto grid track resolves against a track that is
+            itself sized by its content, and collapses.
+            On desktop the photo spans both rows in its own column, which is the
+            original side-by-side. A grid rather than two blocks, so the heading
+            exists once rather than once per breakpoint. */}
+        <div className="mx-auto grid max-w-6xl grid-cols-[auto_1fr] items-start gap-x-5 gap-y-5 px-5 pb-10 pt-[106px] md:grid-cols-[340px_1fr] md:items-center md:gap-x-14 md:gap-y-5 md:px-6 md:pb-20 md:pt-[168px]">
+          <div className="aspect-[3/5] w-[31vw] max-w-[140px] overflow-hidden rounded-2xl border-2 border-signal bg-midnight-2 md:row-span-2 md:w-[340px] md:max-w-none md:rounded-3xl">
+            <Image
+              src="/abinash-about.webp"
+              alt="Abinash"
+              width={900}
+              height={1500}
+              priority
+              className="h-full w-full object-cover object-top"
+            />
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 self-center md:self-end">
             <p className="kicker text-signal">About</p>
-            <h1 className="mt-2.5 font-serif text-[36px] font-bold leading-[1.1] md:mt-3.5 md:text-[56px] md:leading-[1.08]">
+            <h1 className="mt-2 font-serif text-[clamp(19px,6.2vw,26px)] font-bold leading-[1.15] md:mt-3.5 md:text-[56px] md:leading-[1.08]">
               Hi, I&apos;m Abinash. <em className="font-normal text-signal">I explain money in plain words.</em>
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-mist md:mt-5 md:text-[19px]">
-              I&apos;m based in Coimbatore. I make short videos and free guides for Indian salaried professionals who
-              were never taught how money works. One question at a time, with the real numbers worked out.
-            </p>
           </div>
+          <p className="col-span-2 max-w-2xl text-base leading-relaxed text-mist md:col-span-1 md:col-start-2 md:self-start md:text-[19px]">
+            I&apos;m based in Coimbatore. I make short videos and free guides for Indian salaried professionals who
+            were never taught how money works. One question at a time, with the real numbers worked out.
+          </p>
         </div>
       </section>
 
@@ -130,7 +178,7 @@ export default function AboutPage() {
             <div className="mt-5 md:mt-0 md:max-w-md md:flex-none">
               <a
                 href={`mailto:${site.email}`}
-                className="block rounded-full bg-signal px-4 py-3.5 text-center text-[15px] font-semibold text-midnight"
+                className="btn btn-primary w-full px-4 py-3.5 text-[15px]"
               >
                 {site.email}
               </a>

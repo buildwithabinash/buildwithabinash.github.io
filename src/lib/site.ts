@@ -16,10 +16,38 @@ export const site = {
   url: "https://buildwithabinash.github.io",
   email: "buildwithabinash@gmail.com",
   tagline: "Personal finance, made simple",
-  oneLiner: "Money is 20% math and 80% behaviour. I make both simple, so you can decide for yourself.",
+  oneLiner:
+    "Nobody taught us money. I want everyone to understand it well enough to manage their own, see a scam coming, and grow and protect what they have.",
   description:
-    "Free personal finance guides and short videos for Indian salaried professionals. One money question at a time, real numbers, no tips or shortcuts.",
+    "Free personal finance guides and calculators for Indian salaried professionals. Manage your own money, avoid scams, and grow and protect what you have.",
   signOff: "Let's learn the smart way.",
+};
+
+/**
+ * Where the survey posts. The site is a static export with no server of its
+ * own, so answers go to Formspree.
+ *
+ * To switch it on: make a free form at formspree.io, then paste the endpoint it
+ * gives you here, e.g. "https://formspree.io/f/abcdwxyz". Nothing else needs to
+ * change; the form already matches Formspree's conventions, including the
+ * _gotcha spam trap. Read the answers at formspree.io under that form.
+ *
+ * While this is null the survey page says it is not collecting yet and the form
+ * is disabled, rather than silently losing answers. The endpoint is public by
+ * design for this kind of service; it is not a secret.
+ */
+export const surveyEndpoint: string | null = "https://formspree.io/f/xdeazddb";
+
+/**
+ * The default social card. Next replaces the whole openGraph object when a page
+ * defines its own, rather than merging, so any page that sets openGraph has to
+ * pass images through or it ships a summary_large_image card with nothing in it.
+ */
+export const ogImage = {
+  url: "/og.jpg",
+  width: 1200,
+  height: 630,
+  alt: `${site.name} · ${site.tagline}`,
 };
 
 export const socials: Social[] = [
@@ -36,15 +64,15 @@ export const socials: Social[] = [
     name: "Broadcast channel",
     handle: "Abinash Updates",
     note: "New guides first",
-    url: null, // TODO: Instagram broadcast channel invite link
+    url: "https://www.instagram.com/channel/U0jh-KFxn8LWC_dJ/",
     cta: "Join",
   },
   {
     id: "youtube",
     name: "YouTube",
-    handle: "@Buildwithabinash",
+    handle: "@buildwithabinash",
     note: "Longer explainers",
-    url: "https://www.youtube.com/@Buildwithabinash",
+    url: "https://www.youtube.com/@buildwithabinash",
     cta: "Subscribe",
   },
   {
@@ -52,7 +80,7 @@ export const socials: Social[] = [
     name: "Facebook",
     handle: "Build with Abinash",
     note: "Videos and updates",
-    url: null, // TODO: Facebook page link
+    url: "https://www.facebook.com/buildwithabinash",
     cta: "Follow",
   },
 ];

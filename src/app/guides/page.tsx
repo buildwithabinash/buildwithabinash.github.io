@@ -1,16 +1,39 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { JsonLd } from "@/components/JsonLd";
+import { guideHref, guides } from "@/lib/guides";
+import { breadcrumbs, collectionSchema, graph } from "@/lib/schema";
+import { ogImage, site } from "@/lib/site";
 import { GuidesBrowser } from "./GuidesBrowser";
+
+const description =
+  "Every free @buildwithabinash PDF guide in one place: SIP, EPF, government schemes, buying a bike or car, and more. Sourced, dated and in plain words.";
 
 export const metadata: Metadata = {
   title: "Free guides",
-  description:
-    "Every free @buildwithabinash PDF guide in one place: SIP, EPF, government schemes, buying a bike or car, and more. Sourced, dated and in plain words.",
+  description,
+  alternates: { canonical: "/guides/" },
+  openGraph: { title: "Free guides", description, url: `${site.url}/guides/`, images: [ogImage] },
 };
 
 export default function GuidesPage() {
   return (
     <>
+      <JsonLd
+        data={graph(
+          collectionSchema(
+            "Free guides",
+            description,
+            "/guides/",
+            guides.map((g) => ({ name: `${g.title} ${g.titleEm}`.replace(/\s+/g, " "), path: guideHref(g.slug) })),
+          ),
+          breadcrumbs([
+            { name: "Home", path: "/" },
+            { name: "Guides", path: "/guides/" },
+          ]),
+        )}
+      />
       <section className="border-b border-line">
         <div className="mx-auto max-w-6xl px-5 pt-8 md:px-6 md:pt-[72px]">
           <p className="kicker text-green">Free guides · No signup</p>
@@ -18,8 +41,8 @@ export default function GuidesPage() {
             Every guide, <em className="font-normal text-green">in plain words.</em>
           </h1>
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-muted md:mt-4 md:text-lg">
-            These are the PDFs I send when you comment &quot;PDF&quot; on a video. Each one has the full numbers, the
-            sources, and the date I last checked them.
+            These are the PDFs I send when you comment &quot;PDF&quot; on a video. Each one has the full numbers and
+            the sources. Where a guide shows a date, that is the day I last checked those numbers against the source.
           </p>
         </div>
         <Suspense>
@@ -33,17 +56,23 @@ export default function GuidesPage() {
             <div>
               <h2 className="font-serif text-[22px] font-bold text-ink md:text-[28px]">Want a guide on something else?</h2>
               <p className="mt-2 text-[15px] leading-relaxed md:text-base">
-                Tell me the money question in the comments of any video. The most asked ones become the next guide.
+                Tell me the money question, here or in the comments of any video. The most asked ones become the next
+                guide.
               </p>
             </div>
-            <a
-              href="https://www.instagram.com/buildwithabinash/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-none rounded-full bg-deep px-6 py-3.5 text-center font-semibold text-white hover:bg-green"
-            >
-              Ask on Instagram
-            </a>
+            <div className="flex flex-none flex-col gap-2.5 sm:flex-row">
+              <Link href="/survey/" className="btn btn-primary px-6 py-3.5">
+                Suggest a topic
+              </Link>
+              <a
+                href="https://www.instagram.com/buildwithabinash/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-ghost px-6 py-3.5"
+              >
+                Ask on Instagram
+              </a>
+            </div>
           </div>
         </div>
       </section>

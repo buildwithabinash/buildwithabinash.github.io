@@ -4,7 +4,7 @@ import { Logo } from "./Logo";
 
 export function Footer() {
   return (
-    <footer className="on-dark bg-midnight text-dim">
+    <footer className="on-dark border-t border-paper/10 bg-midnight text-dim">
       <div className="mx-auto max-w-6xl px-5 pb-10 pt-9 md:px-6 md:pt-14">
         <div className="flex flex-col gap-6 md:flex-row md:justify-between">
           <div>
@@ -13,8 +13,10 @@ export function Footer() {
           </div>
           <nav aria-label="Footer" className="grid grid-cols-2 gap-x-4 text-sm md:flex md:flex-wrap md:gap-x-7">
             <Link href="/guides/" className="py-2.5 text-mist hover:text-paper">Guides</Link>
+            <Link href="/tools/" className="py-2.5 text-mist hover:text-paper">Calculators</Link>
             <Link href="/about/" className="py-2.5 text-mist hover:text-paper">About</Link>
             <Link href="/about/#research" className="py-2.5 text-mist hover:text-paper">How I research</Link>
+            <Link href="/survey/" className="py-2.5 text-mist hover:text-paper">Suggest a topic</Link>
             <a href={`mailto:${site.email}`} className="py-2.5 text-mist hover:text-paper">Email me</a>
           </nav>
         </div>

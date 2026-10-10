@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Download, Play } from "@/components/Icons";
-import { type Guide, getGuide, guideHref, guides, relatedGuides } from "@/lib/guides";
+import { Download, Search } from "@/components/Icons";
+import { JsonLd } from "@/components/JsonLd";
+import { breadcrumbs, graph, guideSchema } from "@/lib/schema";
+import { type Guide, coverHref, getGuide, guideHref, guideOgHref, guides, relatedGuides } from "@/lib/guides";
 import { instagram, site } from "@/lib/site";
 import { StickyBar } from "./StickyBar";
 
@@ -14,12 +17,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const g = getGuide(slug);
   if (!g) return {};
-  const title = `${g.title} ${g.titleEm}`.replace(/\s+/g, " ");
+  // " · Build with Abinash" costs 21 characters and results get cut
+  // around 60, so drop the italic half when the pair would overflow.
+  const full = `${g.title} ${g.titleEm}`.replace(/\s+/g, " ");
+  const title = full.length > 38 ? g.title.replace(/[.,]$/, "") : full;
   return {
     title,
     description: g.subtitle,
     alternates: { canonical: guideHref(g.slug) },
-    openGraph: { title, description: g.subtitle, url: `${site.url}${guideHref(g.slug)}` },
+    openGraph: {
+      type: "article",
+      title,
+      description: g.subtitle,
+      url: `${site.url}${guideHref(g.slug)}`,
+      images: [{ url: guideOgHref(g.slug), width: 1200, height: 630, alt: full }],
+    },
   };
 }
 
@@ -32,10 +44,19 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
   const meta = [g.pages ? `${g.pages} pages` : null, g.verified ? `Verified ${g.verified}` : null, "Free to share"]
     .filter(Boolean)
     .join(" · ");
-  const reelUrl = g.reelUrl ?? instagram.url ?? "#";
 
   return (
     <>
+      <JsonLd
+        data={graph(
+          guideSchema(g),
+          breadcrumbs([
+            { name: "Home", path: "/" },
+            { name: "Guides", path: "/guides/" },
+            { name: `${g.title} ${g.titleEm}`.replace(/\s+/g, " "), path: guideHref(g.slug) },
+          ]),
+        )}
+      />
       {/* Guide hero */}
       <section className="border-b border-line bg-cream">
         <div className="mx-auto max-w-6xl px-5 pb-8 pt-4 md:px-6 md:pb-[72px] md:pt-8">
@@ -53,29 +74,13 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
               <p className="mt-3.5 text-[13px] text-muted md:order-last md:text-sm">{meta}</p>
               <div className="mt-8 hidden flex-wrap gap-3.5 md:flex">
                 <DownloadButton pdf={g.pdf} slug={g.slug} />
-                <a
-                  href={reelUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2.5 rounded-full border border-deep px-6 py-3.5 font-semibold text-deep hover:bg-white"
-                >
-                  <Play size={20} /> Watch the video
-                </a>
+                <PreviewButton pdf={g.pdf} />
               </div>
             </div>
 
             <div className="flex justify-center md:flex-1">
               <PdfCover g={g} />
             </div>
-
-            <a
-              href={reelUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-full border border-deep px-5 py-[13px] text-[15px] font-semibold text-deep md:hidden"
-            >
-              <Play size={18} /> Watch the video first
-            </a>
           </div>
         </div>
       </section>
@@ -135,25 +140,23 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
               </div>
             )}
 
-            {/* The reel */}
-            <div className="on-dark mt-8 flex items-center gap-4 rounded-2xl bg-midnight p-[18px] text-paper md:mt-14 md:gap-7 md:rounded-3xl md:p-7">
-              <div className="flex aspect-[9/16] w-[84px] flex-none items-center justify-center rounded-xl border border-signal/30 bg-midnight-2 text-[10px] text-dim md:w-[150px] md:text-xs">
-                Reel
-              </div>
-              <div className="min-w-0">
-                <p className="kicker text-[10px] text-signal md:text-[11px]">The video this guide expands</p>
-                <p className="mt-1.5 font-serif text-lg font-bold leading-snug md:mt-2.5 md:text-2xl">
-                  {g.reelTitle ?? "Watch it on Instagram"}
-                </p>
-                <a
-                  href={reelUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-block rounded-full bg-signal px-4 py-2.5 text-sm font-semibold text-midnight md:mt-[18px] md:px-5 md:py-3 md:text-base"
-                >
-                  Watch on Instagram
-                </a>
-              </div>
+            {/* Where the next one comes from */}
+            <div className="on-dark mt-8 rounded-2xl bg-midnight p-6 text-paper md:mt-14 md:rounded-3xl md:p-8">
+              <p className="kicker text-signal">More like this</p>
+              <p className="mt-2.5 font-serif text-xl font-bold leading-snug md:text-[26px]">
+                New guides land on Instagram first.
+              </p>
+              <p className="mt-2.5 max-w-xl text-[15px] leading-relaxed text-sage md:text-base">
+                A short video most days, and the PDF in the comments when enough people ask for it.
+              </p>
+              <a
+                href={instagram.url ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary mt-5 px-6 py-3 md:mt-6"
+              >
+                <span>Follow {site.handle}</span>
+              </a>
             </div>
           </div>
 
@@ -164,8 +167,9 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
               <p className="mt-2 text-[15px] leading-relaxed text-soft">
                 Free, no signup. Save it, print it, or send it to a friend who keeps saying they will start &quot;next month&quot;.
               </p>
-              <div className="mt-4">
+              <div className="mt-4 flex flex-col gap-2.5">
                 <DownloadButton pdf={g.pdf} slug={g.slug} block />
+                <PreviewButton pdf={g.pdf} block />
               </div>
             </div>
             <div className="rounded-2xl border border-line p-5 md:p-6">
@@ -213,7 +217,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
 }
 
 function DownloadButton({ pdf, slug, block = false }: { pdf: string | null; slug: string; block?: boolean }) {
-  const cls = `inline-flex items-center justify-center gap-2.5 rounded-full px-6 py-[15px] font-semibold ${block ? "w-full" : ""}`;
+  const cls = `btn px-6 py-[15px] ${block ? "w-full" : ""}`;
   if (!pdf) {
     return (
       <span className={`${cls} cursor-not-allowed bg-line text-muted`} aria-disabled="true">
@@ -222,31 +226,58 @@ function DownloadButton({ pdf, slug, block = false }: { pdf: string | null; slug
     );
   }
   return (
-    <a href={pdf} download={`${slug}-guide-buildwithabinash.pdf`} className={`${cls} bg-deep text-white hover:bg-green`}>
+    <a href={pdf} download={`${slug}-guide-buildwithabinash.pdf`} className={`${cls} btn-primary`}>
       <Download size={20} /> Download the PDF
     </a>
   );
 }
 
-function PdfCover({ g }: { g: Guide }) {
+/** Opens the PDF in the browser's own viewer, rather than saving it. */
+function PreviewButton({ pdf, block = false }: { pdf: string | null; block?: boolean }) {
+  if (!pdf) return null;
   return (
-    <div
-      aria-hidden="true"
-      className="flex aspect-[210/297] w-[210px] rotate-2 flex-col rounded-md border border-rule bg-cream px-[18px] py-5 shadow-[0_24px_48px_rgba(18,74,58,0.14)] md:w-[300px] md:px-[26px] md:py-[30px]"
+    <a
+      href={pdf}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`btn btn-ghost px-6 py-[15px] ${block ? "w-full" : ""}`}
     >
-      <span className="text-[5px] font-bold uppercase tracking-[0.28em] text-green md:text-[7px]">Free guide · @buildwithabinash</span>
-      <span className="mt-[18px] font-serif text-lg font-bold leading-[1.08] text-ink md:mt-[26px] md:text-[25px]">
-        {g.title} <em className="block font-normal text-green">{g.titleEm}</em>
-      </span>
-      {g.stats ? (
-        <span className="mt-auto grid grid-cols-4 border-y border-rule py-[7px] font-serif text-[9px] text-ink md:py-2.5 md:text-[13px]">
-          {g.stats.map((s) => (
-            <span key={s.label} className={s.accent ? "text-green" : ""}>{s.value}</span>
-          ))}
-        </span>
-      ) : (
-        <span className="mt-auto border-t border-rule pt-2 font-serif text-[8px] italic text-muted md:text-[10px]">Let&apos;s learn the smart way.</span>
-      )}
-    </div>
+      <Search size={19} /> Preview
+    </a>
+  );
+}
+
+/**
+ * The real first page, rendered from the PDF at build time rather than
+ * mocked up in markup. Clicking it opens the document.
+ */
+function PdfCover({ g }: { g: Guide }) {
+  const sheet = (
+    <Image
+      src={coverHref(g.slug)}
+      alt={`First page of the ${g.title} ${g.titleEm} guide`}
+      width={760}
+      height={1076}
+      // The cover sits above the fold on phones and is the page's LCP element.
+      // Left lazy it was discovered late, costing ~1.5s of load delay.
+      priority
+      className="block h-auto w-full"
+    />
+  );
+  const frame =
+    "w-[210px] overflow-hidden rounded-lg border border-rule bg-cream shadow-[0_18px_40px_rgba(18,74,58,0.13)] md:w-[300px]";
+
+  if (!g.pdf) return <div className={frame}>{sheet}</div>;
+
+  return (
+    <a
+      href={g.pdf}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`Open the ${g.title} ${g.titleEm} PDF`}
+      className={`${frame} block transition-shadow hover:shadow-[0_24px_52px_rgba(18,74,58,0.22)]`}
+    >
+      {sheet}
+    </a>
   );
 }

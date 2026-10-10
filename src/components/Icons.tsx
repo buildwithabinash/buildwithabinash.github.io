@@ -25,7 +25,6 @@ export const Check = (p: P) => (<Base {...p}><path d="M20 6 9 17l-5-5" /></Base>
 export const Menu = (p: P) => (<Base {...p}><path d="M4 7h16M4 12h16M4 17h16" /></Base>);
 export const Close = (p: P) => (<Base {...p}><path d="M6 6l12 12M18 6 6 18" /></Base>);
 export const Download = (p: P) => (<Base {...p}><path d="M12 3v12" /><path d="m7 10 5 5 5-5" /><path d="M5 21h14" /></Base>);
-export const Play = (p: P) => (<Base {...p}><polygon points="7 4 20 12 7 20 7 4" /></Base>);
 export const Share = (p: P) => (<Base {...p}><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4" /></Base>);
 export const Search = (p: P) => (<Base {...p}><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></Base>);
 export const Arrow = (p: P) => (<Base {...p}><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></Base>);
@@ -47,6 +46,8 @@ export const TopicIcon = ({ topic, ...p }: P & { topic: string }) => {
       return (<Base {...p}><path d="M3 10 12 4l9 6" /><path d="M5 10v9h14v-9" /><path d="M10 19v-5h4v5" /></Base>);
     case "Buying smart":
       return (<Base {...p}><path d="M5 17h14l-1.5-6h-11z" /><circle cx="7.5" cy="18.5" r="1.5" /><circle cx="16.5" cy="18.5" r="1.5" /><path d="M7 11l2-4h6l2 4" /></Base>);
+    case "Loans and debt":
+      return (<Base {...p}><rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="2.5" /><path d="M6 12h.01M18 12h.01" /></Base>);
     default:
       return (<Base {...p}><circle cx="12" cy="12" r="9" /><path d="M9 10h.01M15 10h.01" /><path d="M9 15c1.5 1.3 4.5 1.3 6 0" /></Base>);
   }

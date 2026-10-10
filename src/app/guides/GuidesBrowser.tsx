@@ -1,28 +1,32 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { GuideCard } from "@/components/GuideCard";
 import { Search } from "@/components/Icons";
-import { type Topic, getGuide, guides, paths, topics } from "@/lib/guides";
+import { type Topic, getGuide, guides, steps, topics } from "@/lib/guides";
 
 type Filter = "All" | Topic;
 
 export function GuidesBrowser() {
-  const params = useSearchParams();
   const [topic, setTopic] = useState<Filter>("All");
   const [pathId, setPathId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
 
-  // Deep links: /guides/?topic=Buying%20smart or /guides/?path=first-salary
+  // Deep links: /guides/?topic=Buying%20smart or /guides/?step=real-price
+  //
+  // Read from the URL directly rather than with useSearchParams. In a
+  // static export that hook makes the whole subtree client-only, which
+  // left this page with no guides in its HTML at all: nothing for search
+  // engines to follow, and a blank page without JavaScript.
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
     const t = params.get("topic");
-    const p = params.get("path");
+    const p = params.get("step");
     if (t && (topics as readonly string[]).includes(t)) setTopic(t as Topic);
-    if (p && paths.some((x) => x.id === p)) setPathId(p);
-  }, [params]);
+    if (p && steps.some((x) => x.id === p)) setPathId(p);
+  }, []);
 
-  const path = paths.find((p) => p.id === pathId) ?? null;
+  const path = steps.find((p) => p.id === pathId) ?? null;
 
   const shown = useMemo(() => {
     let list = path ? path.guides.map((s) => getGuide(s)!).filter(Boolean) : guides;

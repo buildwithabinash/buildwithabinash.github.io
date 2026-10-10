@@ -1,9 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 import { FollowAlong } from "@/components/FollowAlong";
 import { GuideCard } from "@/components/GuideCard";
-import { Check, TopicIcon } from "@/components/Icons";
-import { guides, guidesInTopic, paths, series, topics } from "@/lib/guides";
-import { site } from "@/lib/site";
+import { Hero } from "@/components/Hero";
+import { TopicIcon } from "@/components/Icons";
+import { featuredTools, toolHref, tools, toolsForStep } from "@/lib/tools";
+import { guides, guidesInTopic, steps, topics } from "@/lib/guides";
 
 const pillars = [
   { title: "Money psychology", text: "Why we delay, panic and overspend, and how to catch yourself doing it." },
@@ -18,106 +20,68 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="topo on-dark text-paper">
-        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-5 pb-11 pt-9 md:flex-row md:items-center md:gap-14 md:px-6 md:py-24">
-          <div className="min-w-0 md:flex-[1.6]">
-            {/* Mobile: face first, so people from Instagram recognise you */}
-            <div className="flex items-center gap-3.5 md:hidden">
-              <div className="relative h-[76px] w-[76px] flex-none">
-                <div className="dots absolute -right-2 -top-2 h-10 w-10 rounded-lg" />
-                <div className="absolute inset-0 flex items-center justify-center rounded-full border-2 border-signal bg-midnight-2 text-[10px] text-dim">
-                  Photo
-                </div>
-              </div>
-              <div>
-                <p className="font-serif text-lg font-bold">Abinash</p>
-                <p className="text-[13px] text-dim">{site.handle}</p>
-              </div>
-            </div>
-
-            <p className="kicker mt-7 text-signal md:mt-0 md:text-[13px]">{site.tagline}</p>
-            <h1 className="mt-3 font-serif text-[36px] font-bold leading-[1.12] md:mt-5 md:text-6xl md:leading-[1.08]">
-              Money is 20% math and 80% behaviour. <em className="font-normal text-signal">I make both simple.</em>
-            </h1>
-            <p className="mt-4 max-w-xl text-base leading-relaxed text-sage md:mt-6 md:text-[19px]">
-              Free guides and short videos for Indian salaried professionals. I take one money question at a time,
-              work out the real numbers, and skip the tips and shortcuts.
-            </p>
-            <div className="mt-6 flex flex-col gap-2.5 sm:flex-row md:mt-9 md:gap-3.5">
-              <Link
-                href="/guides/"
-                className="rounded-full bg-signal px-6 py-[15px] text-center font-semibold text-midnight hover:brightness-95"
-              >
-                Browse free guides
-              </Link>
-              <Link
-                href="/#start"
-                className="rounded-full border border-paper/35 px-6 py-[14px] text-center font-medium text-paper hover:border-paper"
-              >
-                New here? Start here
-              </Link>
-            </div>
-            <ul className="mt-6 flex flex-col gap-2.5 text-sm text-dim md:mt-11 md:flex-row md:flex-wrap md:gap-x-7">
-              {["Free, no signup", "Every number sourced and dated", "Education, not advice"].map((t) => (
-                <li key={t} className="flex items-center gap-2.5">
-                  <Check size={18} className="text-signal" />
-                  {t}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Desktop portrait */}
-          <div className="hidden justify-center md:flex md:flex-1">
-            <div className="relative aspect-square w-[360px] max-w-full">
-              <div className="dots absolute -right-[18px] -top-[18px] h-40 w-40 rounded-3xl" />
-              <div className="absolute inset-0 flex items-center justify-center rounded-full border-[3px] border-signal bg-midnight-2 text-sm text-dim">
-                Portrait coming soon
-              </div>
-              <div className="absolute -left-3 bottom-[18px] rounded-2xl bg-paper px-4 py-3 text-ink shadow-2xl">
-                <p className="font-serif text-[17px] font-bold">Abinash</p>
-                <p className="text-[13px] text-muted">{site.handle}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       {/* Start here */}
       <section id="start" className="scroll-mt-20">
-        <div className="mx-auto max-w-6xl px-5 pb-5 pt-12 md:px-6 md:pb-10 md:pt-24">
+        <div className="mx-auto max-w-6xl px-5 pb-10 pt-12 md:px-6 md:pb-16 md:pt-24">
           <p className="kicker text-green">Start here</p>
           <h2 className="mt-2.5 font-serif text-[28px] font-bold leading-tight text-ink md:text-[42px]">
-            Pick where you are. <em className="font-normal text-green">Follow the path.</em>
+            Money has an order. <em className="font-normal text-green">Most of us learn it backwards.</em>
           </h2>
-          <p className="mt-3 hidden max-w-2xl text-[17px] leading-relaxed text-muted md:block">
-            Each path is a short, ordered set of guides. Read them in order and you will understand the topic well
-            enough to decide for yourself.
+          <p className="mt-3.5 max-w-2xl text-[15px] leading-relaxed text-muted md:mt-4 md:text-[17px]">
+            Investing is the interesting part, so it is where nearly everyone starts. It is step six. Here is what comes
+            before it, and why each step has to come before the next one.
           </p>
-          <div className="mt-5 grid gap-3 md:mt-11 md:grid-cols-3 md:gap-6">
-            {paths.map((p, i) => (
-              <Link
-                key={p.id}
-                href={`/guides/?path=${p.id}`}
-                className="flex gap-4 rounded-2xl border border-line bg-white p-[18px] hover:shadow-lg md:flex-col md:gap-3.5 md:p-7"
-              >
-                <span className="w-8 flex-none font-serif text-[26px] leading-none text-green md:text-[44px]">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block font-serif text-lg font-bold text-ink md:text-2xl">{p.title}</span>
-                  <span className="mt-1 block text-sm leading-relaxed text-soft md:mt-3 md:text-[15px]">
-                    <span className="md:hidden">{p.short}</span>
-                    <span className="hidden md:inline">{p.text}</span>
+
+          <ol className="mt-8 md:mt-14">
+            {steps.map((s, i) => {
+              const linked = s.guides.length > 0;
+              const stepTools = toolsForStep(s.id);
+              return (
+                <li key={s.id} className="relative flex gap-4 pb-8 last:pb-0 md:gap-8">
+                  {/* the rail that makes it a sequence rather than a list */}
+                  <span aria-hidden className="flex flex-none flex-col items-center">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-green/35 bg-mint font-serif text-sm font-bold text-green md:h-11 md:w-11 md:text-base">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    {i < steps.length - 1 && <span className="mt-1 w-px flex-1 bg-rule" />}
                   </span>
-                  <span className="mt-2 block text-[13px] font-semibold text-green md:mt-4 md:text-sm">
-                    {p.guides.length} {p.guides.length === 1 ? "guide" : "guides"} · Start the path →
-                  </span>
-                </span>
-              </Link>
-            ))}
-          </div>
+
+                  <div className="min-w-0 flex-1 pb-1">
+                    <h3 className="font-serif text-lg font-bold leading-snug text-ink md:text-[26px]">{s.title}</h3>
+                    <p className="mt-2 text-[15px] leading-relaxed text-body md:mt-2.5 md:text-[17px]">{s.what}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-muted md:text-[15px]">
+                      <span className="font-semibold text-soft">Why here: </span>
+                      {s.why}
+                    </p>
+
+                    {(linked || stepTools.length > 0) && (
+                      <p className="mt-3.5 flex flex-wrap gap-x-4 gap-y-2 text-[13px] font-semibold md:text-sm">
+                        {linked && (
+                          <Link href={"/guides/?step=" + s.id} className="text-green hover:underline">
+                            {s.guides.length} {s.guides.length === 1 ? "guide" : "guides"} →
+                          </Link>
+                        )}
+                        {/* One count link per step rather than every tool. The
+                            home page shows four calculators in total; the rest
+                            live on /tools/, where this lands on the group. */}
+                        {stepTools.length > 0 && (
+                          <Link href={`/tools/#${s.id}`} className="text-green hover:underline">
+                            {stepTools.length} {stepTools.length === 1 ? "calculator" : "calculators"} →
+                          </Link>
+                        )}
+                      </p>
+                    )}
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+
+          <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-muted md:text-sm">
+            This is the general order, not a plan for your situation. Education, not advice.
+          </p>
         </div>
       </section>
 
@@ -170,49 +134,44 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Series */}
-      <section id="series" className="topo on-dark scroll-mt-16 text-paper">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-12 md:flex-row md:items-center md:gap-12 md:px-6 md:py-24">
-          <div className="min-w-0 md:flex-1">
-            <p className="kicker text-signal">Series · {series.count} episodes</p>
-            <h2 className="mt-2.5 font-serif text-[28px] font-bold leading-tight md:text-[40px]">
-              {series.title}, <em className="font-normal text-signal">{series.titleEm}</em>
-            </h2>
-            <p className="mt-4 hidden text-[17px] leading-relaxed text-sage md:block">
-              Each episode stands on its own. Watch them in order and the market stops feeling like a casino.
-            </p>
-            <a
-              href={series.url ?? "https://www.instagram.com/buildwithabinash/"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-7 hidden rounded-full bg-signal px-6 py-3.5 font-semibold text-midnight md:inline-block"
-            >
-              Watch the series
-            </a>
+      {/* Tools */}
+      <section id="tools" className="hero-spot on-dark scroll-mt-16 text-paper">
+        <div className="relative z-[2] mx-auto max-w-6xl px-5 py-12 md:px-6 md:py-24">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div className="min-w-0">
+              <p className="flex items-center gap-3.5 text-signal">
+                <span className="h-px w-7 flex-none bg-signal/70" />
+                <span className="kicker">Free calculators</span>
+              </p>
+              <h2 className="mt-4 font-serif text-[28px] font-bold leading-tight md:text-[40px]">
+                Run your own numbers, <em className="font-normal text-signal">not mine.</em>
+              </h2>
+              <p className="mt-3.5 hidden max-w-xl text-[17px] leading-relaxed text-sage md:block">
+                The same maths I use in the videos. Change the inputs until they match your life, and watch what moves.
+              </p>
+            </div>
+            <Link href="/tools/" className="py-2 text-sm font-semibold text-signal md:text-[15px]">
+              All {tools.length} calculators →
+            </Link>
           </div>
-          <ol className="flex min-w-0 flex-col gap-2 md:flex-[1.2] md:gap-2.5">
-            {series.episodes.map((e, i) => (
-              <li
-                key={e}
-                className="flex items-center gap-3.5 rounded-xl border border-signal/25 bg-white/5 px-4 py-3.5 md:gap-[18px] md:px-5 md:py-4"
+
+          <div className="mt-6 grid gap-2.5 md:mt-11 md:grid-cols-2 md:gap-4">
+            {featuredTools.map((t) => (
+              <Link
+                key={t.slug}
+                href={toolHref(t.slug)}
+                className="group flex items-center justify-between gap-4 rounded-2xl border border-signal/25 bg-white/5 px-5 py-4 hover:border-signal md:px-6 md:py-5"
               >
-                <span className="w-5 font-serif text-xl text-signal md:w-7 md:text-[22px]">{i + 1}</span>
-                <span className="text-[15px] md:text-base">{e}</span>
-              </li>
+                <span className="min-w-0">
+                  <span className="block font-serif text-lg font-bold md:text-xl">
+                    {t.name} <em className="font-normal text-signal">{t.nameEm}</em>
+                  </span>
+                  <span className="mt-1 block text-sm text-dim md:text-[15px]">{t.short}</span>
+                </span>
+                <span aria-hidden className="flex-none text-signal transition-transform group-hover:translate-x-1">→</span>
+              </Link>
             ))}
-            <li className="flex items-center gap-3.5 px-4 py-3.5 text-dim md:gap-[18px] md:px-5">
-              <span className="w-5 font-serif text-xl md:w-7">+{series.count - series.episodes.length}</span>
-              <span className="text-[15px] md:text-base">{series.more}</span>
-            </li>
-          </ol>
-          <a
-            href={series.url ?? "https://www.instagram.com/buildwithabinash/"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full bg-signal px-6 py-3.5 text-center font-semibold text-midnight md:hidden"
-          >
-            Watch the series
-          </a>
+          </div>
         </div>
       </section>
 
@@ -234,19 +193,38 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About teaser */}
-      <section className="border-t border-line bg-white">
-        <div className="mx-auto flex max-w-6xl flex-col gap-12 px-5 py-11 md:flex-row md:items-center md:px-6 md:py-24">
-          <div className="hidden h-[260px] w-[220px] flex-none items-center justify-center rounded-3xl border border-[#cfe3d8] bg-mint text-center text-sm text-green md:flex">
-            Photo coming soon
+      {/* About teaser, on the dark grain-and-glow treatment. The section above
+          it is cream and Follow along below is now cream too, so this reads as
+          its own band without needing a divider. */}
+      <section className="topo on-dark text-paper">
+        {/* One grid, two shapes. On phones the heading sits beside the photo so
+            the space next to it is used, and the copy runs full width beneath.
+            On desktop the photo spans all three rows in its own column, which
+            is the original side-by-side. Laid out as a grid rather than two
+            blocks so the heading exists once, not once per breakpoint. */}
+        <div className="mx-auto grid max-w-6xl grid-cols-[auto_1fr] items-center gap-x-5 gap-y-4 px-5 py-11 md:grid-cols-[230px_1fr] md:gap-x-12 md:gap-y-0 md:px-6 md:py-24">
+          <div className="h-[198px] w-[134px] flex-none self-start overflow-hidden rounded-2xl border border-paper/15 bg-midnight-2 md:row-span-2 md:h-[340px] md:w-[230px] md:self-center md:rounded-3xl">
+            {/* A tighter crop than the About page uses. That one was widened
+                to give him room in a 340x567 frame; in this thumbnail the same
+                margins leave him small and lost, so this keeps the original
+                close framing. */}
+            <Image
+              src="/abinash-teaser.webp"
+              alt="Abinash"
+              width={768}
+              height={1280}
+              className="h-full w-full object-cover object-top"
+            />
           </div>
-          <div>
-            <h2 className="font-serif text-[28px] font-bold text-ink md:text-[38px]">Hi, I&apos;m Abinash.</h2>
-            <p className="mt-3 max-w-2xl text-base leading-relaxed md:mt-4 md:text-lg">
+          <h2 className="self-center font-serif text-[26px] font-bold leading-tight md:self-end md:text-[38px]">
+            Hi, I&apos;m Abinash.
+          </h2>
+          <div className="col-span-2 md:col-span-1 md:col-start-2">
+            <p className="max-w-2xl text-base leading-relaxed text-sage md:mt-4 md:text-lg">
               I make short videos and free guides about money for people who were never taught it. I want you to
               understand money well enough that you don&apos;t need an influencer to tell you what to do. Including me.
             </p>
-            <Link href="/about/" className="mt-3 inline-block py-2.5 font-semibold text-green md:mt-5 md:text-base">
+            <Link href="/about/" className="mt-3 inline-block py-2.5 font-semibold text-signal md:mt-5 md:text-base">
               More about me and how I work →
             </Link>
           </div>
