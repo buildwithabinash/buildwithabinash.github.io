@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postbuild": "node scripts/preload-fonts.mjs"
   },
   "dependencies": {
     "@fontsource-variable/lora": "^5.3.0",
