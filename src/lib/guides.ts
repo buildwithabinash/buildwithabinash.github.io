@@ -302,6 +302,38 @@ export const guides: Guide[] = [
     verified: null,
   },
   {
+    slug: "negative-balance",
+    topic: "Loans and debt",
+    title: "Bank account in minus?",
+    titleEm: "That fine may not be legal.",
+    subtitle:
+      "The full RBI rules behind my negative balance video, plus the exact email and the complaint steps to get it fixed.",
+    blurb:
+      "A bank cannot push your savings account below zero with minimum balance fines alone. The rule, the email to send, and where to complain free if they ignore you.",
+    pdf: "/guides/negative-balance.pdf",
+    pages: 9,
+    verified: null,
+    stats: [
+      { label: "Fine floor", value: "₹0", accent: true },
+      { label: "Bank gets", value: "30 days" },
+      { label: "Then escalate", value: "90 days" },
+      { label: "Fee to complain", value: "₹0", accent: true },
+    ],
+    statsNote:
+      "Minimum balance charges alone must not take a savings account below zero. The 30 days is how long the bank has to reply, not a deadline to reverse the fine.",
+    notice:
+      "The rule protects you from minimum balance fines only. If the minus came from something else, a loan EMI or a cheque bounce charge, ask the bank to explain each debit first.",
+    inside: [
+      { title: "Zero is the floor for fines.", text: "The RBI rule, and where it is written." },
+      { title: "Dormant accounts get more cover.", text: "No minimum balance fine at all since April 2024." },
+      { title: "The email to send your bank.", text: "Ready to copy, with what to attach." },
+      { title: "Bank first, then the Ombudsman.", text: "30 days to reply, then cms.rbi.org.in, free." },
+      { title: "What the video got slightly wrong.", text: "The 30 days is to respond, not to reverse." },
+    ],
+    disclaimerNote:
+      "It covers minimum balance charges and inoperative accounts; other debits follow different rules. I am not a lawyer either. Check the latest RBI notification before acting.",
+  },
+  {
     slug: "car-tcs-refund",
     topic: "Tax, made simple",
     title: "Bought a car above ₹10 lakh?",
