@@ -344,6 +344,39 @@ export const guides: Guide[] = [
     pages: 9,
     verified: null,
   },
+  {
+    slug: "rbi-floating-rate-bond",
+    topic: "Government schemes",
+    title: "An RBI bond that pays",
+    titleEm: "8.05% from ₹1,000.",
+    subtitle:
+      "The full picture of the Floating Rate Savings Bond from my video, and exactly how to buy one.",
+    blurb:
+      "Government-backed, ₹1,000 to start, interest paid every January and July for seven years. How the rate moves, what you keep after tax, and how to apply.",
+    pdf: "/guides/rbi-floating-rate-bond.pdf",
+    pages: 9,
+    verified: "Oct 2026",
+    stats: [
+      { label: "Start with", value: "₹1,000", accent: true },
+      { label: "Rate now", value: "8.05%", accent: true },
+      { label: "Interest paid", value: "6-monthly" },
+      { label: "Tenure", value: "7 yrs" },
+    ],
+    statsNote:
+      "The rate is the NSC rate plus 0.35%, reset every 1 January and 1 July. 8.05% is the rate for Jul to Dec 2026.",
+    notice:
+      "Interest is paid out, not added back, and it is taxed at your slab. Below 60 the money is locked in for the full seven years.",
+    inside: [
+      { title: "What your money actually earns.", text: "Payouts from ₹1,000 to ₹10 lakh." },
+      { title: "Why it's called floating.", text: "The NSC link and the rate so far." },
+      { title: "The rules, in one table.", text: "Who can buy, limits, nomination." },
+      { title: "Exiting early and maturity.", text: "Senior citizens only, and what it costs." },
+      { title: "Two ways to buy it.", text: "RBI Retail Direct or a bank branch, step by step." },
+      { title: "What you keep after tax.", text: "Your slab, your real return." },
+    ],
+    disclaimerNote:
+      "The rate resets every six months, so the payouts shown are illustrations at today's 8.05%. Check the latest terms with RBI or your bank before investing.",
+  },
 ];
 
 /**
@@ -406,7 +439,7 @@ export const steps: Step[] = [
     title: "Then invest. Monthly, and boring.",
     what: "A fixed amount on a fixed date into something diversified, for money you will not need for seven years or more. Raise it whenever your income rises.",
     why: "This is step six, not step one. Started here it compounds quietly for decades, and your early years are the ones with the most time in them.",
-    guides: ["sip", "step-up-sip", "ppf-nps-nsc", "nps-complete", "investing-for-your-child", "ssy", "kvp", "govt-monthly-income", "business-schemes"],
+    guides: ["sip", "step-up-sip", "ppf-nps-nsc", "nps-complete", "investing-for-your-child", "ssy", "kvp", "rbi-floating-rate-bond", "govt-monthly-income", "business-schemes"],
   },
   {
     id: "spot-a-scam",
