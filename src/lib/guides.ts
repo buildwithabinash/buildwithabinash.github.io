@@ -377,6 +377,39 @@ export const guides: Guide[] = [
     disclaimerNote:
       "The rate resets every six months, so the payouts shown are illustrations at today's 8.05%. Check the latest terms with RBI or your bank before investing.",
   },
+  {
+    slug: "gold-locker-od",
+    topic: "Loans and debt",
+    title: "Your locker covers ₹3 lakh.",
+    titleEm: "Your gold is worth ₹25 lakh.",
+    subtitle:
+      "The full numbers from my locker video, how a Gold OD works, and how to set one up.",
+    blurb:
+      "A bank locker pays back at most 100 times its yearly rent, whatever is inside. Why pledged gold in a Gold OD is protected differently, what it really costs, and how to open one.",
+    pdf: "/guides/gold-locker-od.pdf",
+    pages: 10,
+    verified: "Oct 2026",
+    stats: [
+      { label: "Locker payout cap", value: "100x rent" },
+      { label: "OD limit, over ₹5L", value: "up to 75%", accent: true },
+      { label: "Interest on", value: "Used amt", accent: true },
+      { label: "Gold returned in", value: "7 days" },
+    ],
+    statsNote:
+      "The 75% is of the gold metal's value, not the shop bill. For ₹25 lakh of jewellery, expect a limit of around ₹16 lakh.",
+    notice:
+      "A Gold OD is a loan. An unused limit costs no interest, but if you draw and leave dues unpaid, the lender can auction the gold after notice.",
+    inside: [
+      { title: "What a locker actually pays back.", text: "The 100x rent cap, by locker size." },
+      { title: "Why pledged gold is different.", text: "Bank liability, certificate and bailment law." },
+      { title: "How a Gold OD works.", text: "Pay interest only on what you draw." },
+      { title: "75% of which value?", text: "The ₹25 lakh from the video, worked through." },
+      { title: "Locker vs Gold OD over three years.", text: "Every cost side by side." },
+      { title: "Opening one, and your rights.", text: "What to carry, what to check, RBI's 2025 rules." },
+    ],
+    disclaimerNote:
+      "A Gold OD is a loan, and rates, fees and locker rents differ by bank and branch. Read your sanction letter and locker agreement before acting.",
+  },
 ];
 
 /**
