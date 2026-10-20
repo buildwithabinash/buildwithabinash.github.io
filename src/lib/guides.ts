@@ -423,6 +423,40 @@ export const guides: Guide[] = [
     disclaimerNote:
       "A Gold OD is a loan, and rates, fees and locker rents differ by bank and branch. Read your sanction letter and locker agreement before acting.",
   },
+  {
+    slug: "atm-failed-transaction",
+    topic: "Loans and debt",
+    title: "₹20,000 debited, no cash?",
+    titleEm: "Your money is safe.",
+    subtitle:
+      "What to do when an ATM keeps your money, how the refund works, and the ₹100 a day rule your bank has to follow.",
+    blurb:
+      "An ATM debit with no cash must be reversed within five days, and from day six the bank owes you ₹100 a day without being asked. What to note at the machine, what to tell your bank, and when to go to the RBI Ombudsman, free.",
+    pdf: "/guides/atm-failed-transaction.pdf",
+    pages: 9,
+    verified: "Oct 2026",
+    stats: [
+      { label: "Refund within", value: "T+5 days", accent: true },
+      { label: "Late penalty", value: "₹100/day", accent: true },
+      { label: "Bank reply", value: "30 days" },
+      { label: "RBI complaint", value: "₹0 fee", accent: true },
+    ],
+    statsNote:
+      "T is the day the ATM failed, and the five days are calendar days, Sundays and holidays included. The ₹100 a day is owed even if you never complained.",
+    notice:
+      "You don't have to fight for the refund. The bank's clock starts the day the ATM failed, whether you complained or not.",
+    inside: [
+      { title: "The three things to remember.", text: "And the order the video got slightly wrong." },
+      { title: "Where your money actually went.", text: "The ATM's log, and how reconciliation finds it." },
+      { title: "The first 10 minutes at the ATM.", text: "What to note and photograph before you leave." },
+      { title: "What to tell your bank.", text: "The details they ask for, and a message to copy." },
+      { title: "The ₹100 a day rule.", text: "How the clock runs, worked through in rupees." },
+      { title: "Going to the RBI Ombudsman.", text: "When you can, and how to file free." },
+      { title: "The glossary, in plain words.", text: "Every term, with a line in Tamil." },
+    ],
+    disclaimerNote:
+      "These are RBI rules for domestic transactions as of October 2026, and they can change. I am not a lawyer either. Check rbi.org.in or with your bank before acting.",
+  },
 ];
 
 /**
