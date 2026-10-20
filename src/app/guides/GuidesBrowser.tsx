@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { GuideCard } from "@/components/GuideCard";
 import { Search } from "@/components/Icons";
@@ -28,21 +29,32 @@ export function GuidesBrowser() {
 
   const path = steps.find((p) => p.id === pathId) ?? null;
 
+  // Search covers every guide. Stacked on a topic or a path, a search for
+  // a guide that exists could come back empty.
+  const q = query.trim().toLowerCase();
   const shown = useMemo(() => {
-    let list = path ? path.guides.map((s) => getGuide(s)!).filter(Boolean) : guides;
-    if (topic !== "All") list = list.filter((g) => g.topic === topic);
-    const q = query.trim().toLowerCase();
     if (q) {
-      list = list.filter((g) =>
+      return guides.filter((g) =>
         [g.title, g.titleEm, g.blurb, g.topic, g.slug].join(" ").toLowerCase().includes(q),
       );
     }
+    let list = path ? path.guides.map((s) => getGuide(s)!).filter(Boolean) : guides;
+    if (topic !== "All") list = list.filter((g) => g.topic === topic);
     return list;
-  }, [path, topic, query]);
+  }, [path, topic, q]);
 
   const pick = (t: Filter) => {
     setTopic(t);
     setPathId(null);
+    setQuery("");
+  };
+
+  const search = (v: string) => {
+    setQuery(v);
+    if (v.trim()) {
+      setTopic("All");
+      setPathId(null);
+    }
   };
 
   const n = shown.length;
@@ -57,9 +69,9 @@ export function GuidesBrowser() {
             id="guide-search"
             type="search"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => search(e.target.value)}
             placeholder="Search, like EPF or SIP"
-            className="w-full rounded-full border border-rule bg-white py-3.5 pl-11 pr-5 text-base text-body placeholder:text-muted focus:border-green focus:outline-none"
+            className="w-full rounded-full border border-rule bg-surface py-3.5 pl-11 pr-5 text-base text-body placeholder:text-muted focus:border-green focus:outline-none"
           />
         </div>
       </div>
@@ -70,7 +82,7 @@ export function GuidesBrowser() {
         className="no-scrollbar mx-auto mt-3.5 flex max-w-6xl gap-2 overflow-x-auto px-5 pb-2 pt-1 md:mt-5 md:flex-wrap md:gap-2.5 md:px-6"
       >
         {(["All", ...topics] as Filter[]).map((t) => {
-          const on = t === topic && !path;
+          const on = t === topic && !path && !q;
           return (
             <button
               key={t}
@@ -78,7 +90,7 @@ export function GuidesBrowser() {
               onClick={() => pick(t)}
               aria-pressed={on}
               className={`h-11 flex-none whitespace-nowrap rounded-full border px-4 text-sm font-medium md:px-[18px] ${
-                on ? "border-deep bg-deep text-white" : "border-rule bg-white text-body hover:border-green"
+                on ? "border-fill-deep bg-fill-deep text-white" : "border-rule bg-surface text-body hover:border-green"
               }`}
             >
               {t}
@@ -103,7 +115,11 @@ export function GuidesBrowser() {
         </p>
         {n === 0 ? (
           <p className="rounded-2xl border border-dashed border-rule px-5 py-8 text-center text-muted">
-            Nothing here yet. Ask for it in the comments and it may be the next guide.
+            {q ? <>No guide on &quot;{query.trim()}&quot; yet.</> : "Nothing in this topic yet."}{" "}
+            <Link href="/survey/" className="font-semibold text-green underline">
+              Suggest a guide
+            </Link>{" "}
+            and it may be the next one.
           </p>
         ) : (
           <ol className="grid gap-3 md:grid-cols-[repeat(auto-fill,minmax(340px,1fr))] md:gap-6">

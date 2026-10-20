@@ -6,7 +6,8 @@ import { Download, Search } from "@/components/Icons";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbs, graph, guideSchema } from "@/lib/schema";
 import { type Guide, coverHref, getGuide, guideHref, guideOgHref, guides, relatedGuides } from "@/lib/guides";
-import { instagram, site } from "@/lib/site";
+import { instagram, reportErrorHref, site } from "@/lib/site";
+import { getTool, toolHref } from "@/lib/tools";
 import { StickyBar } from "./StickyBar";
 
 export function generateStaticParams() {
@@ -41,6 +42,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
   if (!g) notFound();
 
   const related = relatedGuides(g, 3);
+  const tool = g.tool ? getTool(g.tool) : undefined;
   const meta = [g.pages ? `${g.pages} pages` : null, g.verified ? `Verified ${g.verified}` : null, "Free to share"]
     .filter(Boolean)
     .join(" · ");
@@ -161,17 +163,22 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
           </div>
 
           {/* Side column (stacks under on mobile) */}
-          <aside className="flex min-w-0 flex-col gap-3.5 md:flex-1 md:gap-5">
-            <div id="download" className="hidden scroll-mt-20 rounded-2xl border border-line bg-cream p-6 md:block">
-              <p className="font-serif text-[22px] font-bold text-ink">Get the PDF</p>
-              <p className="mt-2 text-[15px] leading-relaxed text-soft">
-                Free, no signup. Save it, print it, or send it to a friend who keeps saying they will start &quot;next month&quot;.
-              </p>
-              <div className="mt-4 flex flex-col gap-2.5">
-                <DownloadButton pdf={g.pdf} slug={g.slug} block />
-                <PreviewButton pdf={g.pdf} block />
-              </div>
-            </div>
+          <div className="flex min-w-0 flex-col gap-3.5 md:flex-1 md:gap-5">
+            {tool && (
+              <Link
+                href={toolHref(tool.slug)}
+                className="group rounded-2xl border border-mint-line bg-mint p-5 transition-shadow hover:shadow-lg md:p-6"
+              >
+                <span className="kicker block text-[10px] text-green md:text-[11px]">Run your own numbers</span>
+                <span className="mt-2 block font-serif text-xl font-bold text-ink md:text-[22px]">
+                  {tool.name} <em className="font-normal text-green">{tool.nameEm}</em>
+                </span>
+                <span className="mt-1.5 block text-sm leading-relaxed text-soft">{tool.short}</span>
+                <span className="mt-3 block text-sm font-semibold text-green group-hover:underline">
+                  Open the calculator →
+                </span>
+              </Link>
+            )}
             <div className="rounded-2xl border border-line p-5 md:p-6">
               <p className="kicker text-[10px] text-green md:text-[11px]">How I checked this</p>
               <ul className="mt-2.5 list-disc pl-[18px] text-sm leading-relaxed text-soft">
@@ -179,9 +186,17 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
                 <li>Sources listed on the last page of the PDF</li>
                 <li>{g.verified ? `Re-checked on ${g.verified}` : "Check date shown on the PDF"}</li>
               </ul>
-              <Link href="/about/#research" className="mt-1.5 inline-block py-2 text-sm font-semibold text-green">
-                How I research →
-              </Link>
+              <div className="mt-1.5 flex flex-wrap gap-x-5">
+                <Link href="/about/#research" className="inline-block py-2 text-sm font-semibold text-green">
+                  How I research →
+                </Link>
+                <a
+                  href={reportErrorHref(guideHref(g.slug), `${g.title} ${g.titleEm}`.replace(/\s+/g, " "))}
+                  className="inline-block py-2 text-sm font-semibold text-green"
+                >
+                  Spotted a mistake? →
+                </a>
+              </div>
             </div>
             <div className="rounded-2xl bg-rose px-5 py-[18px] md:px-6">
               <p className="kicker text-[10px] text-alert md:text-[11px]">Disclaimer</p>
@@ -190,7 +205,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
                 SEBI-registered investment adviser. {g.disclaimerNote ?? "Figures can change; check the official source before acting."}
               </p>
             </div>
-          </aside>
+          </div>
         </div>
       </section>
 
@@ -200,7 +215,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
           <h2 className="font-serif text-2xl font-bold text-ink md:text-[30px]">Read next</h2>
           <div className="mt-3.5 grid gap-2.5 md:mt-7 md:grid-cols-3 md:gap-5">
             {related.map((r) => (
-              <Link key={r.slug} href={guideHref(r.slug)} className="rounded-2xl border border-line bg-white px-[18px] py-4 hover:shadow-lg md:p-6">
+              <Link key={r.slug} href={guideHref(r.slug)} className="rounded-2xl border border-line bg-surface px-[18px] py-4 hover:shadow-lg md:p-6">
                 <span className="kicker block text-[10px] text-green md:text-[11px]">{r.topic}</span>
                 <span className="mt-1.5 block font-serif text-lg font-bold text-ink md:mt-2.5 md:text-[21px]">
                   {r.title} {r.titleEm}

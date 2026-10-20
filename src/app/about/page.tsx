@@ -118,7 +118,7 @@ export default function AboutPage() {
             {rules.map((r, i) => (
               <li
                 key={r.title}
-                className="flex gap-3.5 border-b border-line py-4 last:border-b-0 md:flex-col md:gap-2 md:rounded-2xl md:border md:bg-white md:p-6 md:last:border-b"
+                className="flex gap-3.5 border-b border-line py-4 last:border-b-0 md:flex-col md:gap-2 md:rounded-2xl md:border md:bg-surface md:p-6 md:last:border-b"
               >
                 <span className="w-5 flex-none font-serif text-2xl leading-tight text-green md:text-[34px]">{i + 1}</span>
                 <span>
@@ -150,7 +150,7 @@ export default function AboutPage() {
 
       <section>
         <div className="mx-auto flex max-w-6xl flex-col gap-3.5 px-5 pt-10 md:flex-row md:gap-6 md:px-6 md:pt-20">
-          <div className="rounded-2xl border border-line bg-white px-5 py-6 md:flex-1 md:p-8">
+          <div className="rounded-2xl border border-line bg-surface px-5 py-6 md:flex-1 md:p-8">
             <h2 className="font-serif text-[22px] font-bold text-ink md:text-[26px]">What I will never do</h2>
             <ul className="mt-2.5 list-disc pl-5 text-[15px] leading-[1.8] md:mt-3.5 md:text-base">
               <li>Tell you to buy, sell or hold a specific stock or fund</li>
@@ -168,7 +168,7 @@ export default function AboutPage() {
 
       <section>
         <div className="mx-auto max-w-6xl px-5 pb-11 pt-6 md:px-6 md:pb-24 md:pt-10">
-          <div className="on-dark rounded-3xl bg-deep px-5 py-7 text-paper md:flex md:items-center md:justify-between md:gap-7 md:p-10">
+          <div className="on-dark rounded-3xl bg-fill-deep px-5 py-7 text-paper md:flex md:items-center md:justify-between md:gap-7 md:p-10">
             <div>
               <h2 className="font-serif text-2xl font-bold md:text-[30px]">Say hello</h2>
               <p className="mt-2 text-[15px] leading-relaxed text-leaf md:text-base">

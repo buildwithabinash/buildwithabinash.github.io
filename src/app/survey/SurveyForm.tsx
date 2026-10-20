@@ -58,7 +58,7 @@ export function SurveyForm() {
       action={surveyEndpoint ?? undefined}
       method="post"
       onSubmit={onSubmit}
-      className="rounded-2xl border border-line bg-white p-5 md:p-8"
+      className="rounded-2xl border border-line bg-surface p-5 md:p-8"
     >
       {!surveyEndpoint && (
         <p className="mb-6 rounded-xl bg-rose px-4 py-3 text-[13px] leading-relaxed text-alert md:text-sm">
@@ -99,7 +99,7 @@ export function SurveyForm() {
                 <label
                   htmlFor={id}
                   className={`inline-block cursor-pointer rounded-full border px-4 py-2 text-sm transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-green ${
-                    on ? "border-green bg-green text-paper" : "border-line bg-cream text-soft hover:border-green"
+                    on ? "border-fill bg-fill text-paper" : "border-line bg-cream text-soft hover:border-green"
                   }`}
                 >
                   {t}
@@ -136,7 +136,7 @@ export function SurveyForm() {
                 <input type="radio" id={id} name="used" value={opt} className="peer sr-only" />
                 <label
                   htmlFor={id}
-                  className="inline-block cursor-pointer rounded-full border border-line bg-cream px-4 py-2 text-sm text-soft transition-colors hover:border-green peer-checked:border-green peer-checked:bg-green peer-checked:text-paper peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-green"
+                  className="inline-block cursor-pointer rounded-full border border-line bg-cream px-4 py-2 text-sm text-soft transition-colors hover:border-green peer-checked:border-fill peer-checked:bg-fill peer-checked:text-paper peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-green"
                 >
                   {opt}
                 </label>

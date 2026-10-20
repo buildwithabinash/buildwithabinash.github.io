@@ -44,7 +44,11 @@ export function Footer() {
         <p id="disclaimer" className="mt-7 max-w-3xl border-t border-dim/25 pt-5 text-xs leading-relaxed md:text-[13px]">
           {disclaimer}
         </p>
-        <p className="mt-3 text-xs">© {new Date().getFullYear()} {site.name}</p>
+        <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs">
+          <span>© {new Date().getFullYear()} {site.name}</span>
+          <Link href="/privacy/" className="py-2 text-mist hover:text-paper">Privacy</Link>
+          <Link href="/terms/" className="py-2 text-mist hover:text-paper">Terms</Link>
+        </div>
       </div>
     </footer>
   );

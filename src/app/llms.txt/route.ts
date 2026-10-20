@@ -4,7 +4,7 @@
 
 import { guideHref, guides, steps, topics } from "@/lib/guides";
 import { disclaimer, site, socials } from "@/lib/site";
-import { toolGroups, toolHref, tools, toolsForStep } from "@/lib/tools";
+import { modules, toolHref, tools, toolsForModule } from "@/lib/tools";
 
 export const dynamic = "force-static";
 
@@ -37,7 +37,7 @@ export function GET() {
   L.push("");
   L.push(`- [Home](${abs("/")}): the whole site in order, from first payslip to investing.`);
   L.push(`- [All guides](${abs("/guides/")}): every PDF, filterable by topic and by step.`);
-  L.push(`- [All calculators](${abs("/tools/")}): every calculator, grouped by the order to use them in.`);
+  L.push(`- [All calculators](${abs("/tools/")}): every calculator, grouped into modules (salary and tax, government schemes, investing, loans, safety and retirement, strategies).`);
   L.push(`- [About](${abs("/about/")}): who makes this and the five rules every guide follows.`);
   L.push(`- [Survey](${abs("/survey/")}): four questions on what to cover next and what was unclear.`);
   L.push("");
@@ -81,10 +81,10 @@ export function GET() {
 
   L.push("## Calculators");
   L.push("");
-  for (const group of toolGroups) {
-    L.push(`### ${group.title}`);
+  for (const m of modules) {
+    L.push(`### ${m.title}`);
     L.push("");
-    for (const t of toolsForStep(group.step)) {
+    for (const t of toolsForModule(m.id)) {
       L.push(`- [${t.name} ${t.nameEm}](${abs(toolHref(t.slug))}): ${t.blurb}`);
       if (t.assumes) L.push(`  - Assumes: ${t.assumes}`);
     }

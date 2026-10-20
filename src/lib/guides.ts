@@ -1,4 +1,4 @@
-import type { StepId } from "@/lib/tools";
+import type { StepId, ToolSlug } from "@/lib/tools";
 
 // Every guide on the site comes from this list.
 // To add a guide: add an entry here and put its PDF in public/guides/<slug>.pdf,
@@ -36,11 +36,14 @@ export type Guide = {
   inside?: { title: string; text: string }[];
   /** Topic-specific line added to the disclaimer. */
   disclaimerNote?: string;
+  /** The calculator that runs this guide's numbers with your own. */
+  tool?: ToolSlug;
 };
 
 export const guides: Guide[] = [
   {
     slug: "sip",
+    tool: "sip-calculator",
     topic: "Investing basics",
     title: "₹500 a month",
     titleEm: "can become ₹17.6 lakh.",
@@ -105,6 +108,7 @@ export const guides: Guide[] = [
   },
   {
     slug: "govt-monthly-income",
+    tool: "post-office-schemes",
     topic: "Government schemes",
     title: "A monthly income",
     titleEm: "from government schemes.",
@@ -116,6 +120,7 @@ export const guides: Guide[] = [
   },
   {
     slug: "ssy",
+    tool: "ssy-calculator",
     topic: "Government schemes",
     title: "Sukanya Samriddhi Yojana,",
     titleEm: "explained.",
@@ -127,6 +132,7 @@ export const guides: Guide[] = [
   },
   {
     slug: "epf-complete",
+    tool: "epf-calculator",
     topic: "EPF and retirement",
     title: "₹10,000 a month into EPF",
     titleEm: "becomes ₹1.48 crore.",
@@ -138,6 +144,7 @@ export const guides: Guide[] = [
   },
   {
     slug: "nps-complete",
+    tool: "nps-calculator",
     topic: "EPF and retirement",
     title: "₹5,000 a month from 30",
     titleEm: "could be ₹1.13 crore at 60.",
@@ -149,6 +156,7 @@ export const guides: Guide[] = [
   },
   {
     slug: "ppf-nps-nsc",
+    tool: "ppf-calculator",
     topic: "Government schemes",
     title: "₹1.5 lakh a year, safely.",
     titleEm: "Where should it go?",
@@ -182,6 +190,7 @@ export const guides: Guide[] = [
   },
   {
     slug: "kvp",
+    tool: "post-office-schemes",
     topic: "Government schemes",
     title: "₹1 lakh becomes ₹2 lakh",
     titleEm: "in 115 months.",
@@ -193,6 +202,7 @@ export const guides: Guide[] = [
   },
   {
     slug: "investing-for-your-child",
+    tool: "ssy-calculator",
     topic: "Investing basics",
     title: "Three ways to start",
     titleEm: "investing for your child.",
@@ -237,6 +247,7 @@ export const guides: Guide[] = [
   },
   {
     slug: "car-cash-vs-emi",
+    tool: "emi-calculator",
     topic: "Buying smart",
     title: "The ₹8 lakh",
     titleEm: "you didn't spend.",
@@ -248,6 +259,7 @@ export const guides: Guide[] = [
   },
   {
     slug: "prepay-or-invest",
+    tool: "loan-prepayment",
     topic: "Loans and debt",
     title: "Prepay the loan,",
     titleEm: "or invest the money?",
@@ -292,6 +304,7 @@ export const guides: Guide[] = [
   },
   {
     slug: "step-up-sip",
+    tool: "step-up-sip",
     topic: "Investing basics",
     title: "₹20,000 salary.",
     titleEm: "A crore is still possible.",

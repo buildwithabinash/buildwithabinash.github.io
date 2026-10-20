@@ -23,7 +23,7 @@ export function StickyBar({ pdf, slug, title }: { pdf: string | null; slug: stri
   };
 
   return (
-    <div className="sticky-download fixed inset-x-0 bottom-0 z-30 flex gap-2.5 border-t border-line bg-white/95 px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] backdrop-blur md:hidden">
+    <div className="sticky-download fixed inset-x-0 bottom-0 z-30 flex gap-2.5 border-t border-line bg-surface/95 px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_rgba(0,0,0,0.08)] backdrop-blur md:hidden">
       {pdf ? (
         <a
           href={pdf}

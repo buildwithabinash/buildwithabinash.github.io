@@ -7,14 +7,22 @@
 
 /* ── Rates that go stale ───────────────────────────────────────── */
 
-/** The tax year these slabs belong to. Shown in the UI. */
-export const TAX_YEAR = "FY 2025-26 (AY 2026-27)";
+/**
+ * The first calendar year of the tax year the slabs belong to. Bump it
+ * every April after checking the slabs; the tests fail once it is stale.
+ */
+export const TAX_YEAR_START = 2026;
+/**
+ * Shown in the UI. Under the Income-tax Act, 2025 "tax year" replaces the
+ * old financial year and assessment year pair.
+ */
+export const TAX_YEAR = `tax year ${TAX_YEAR_START}-${String(TAX_YEAR_START + 1).slice(2)} (April ${TAX_YEAR_START} to March ${TAX_YEAR_START + 1})`;
 /** When the slabs below were last checked against the department site. */
 export const TAX_CHECKED = "10 Oct 2026";
 
 type Slab = { upTo: number; rate: number };
 
-/** New regime, after Budget 2025. */
+/** New regime, after Budget 2025. Budget 2026 left the slabs unchanged. */
 const NEW_SLABS: Slab[] = [
   { upTo: 400000, rate: 0 },
   { upTo: 800000, rate: 0.05 },
@@ -48,6 +56,18 @@ export const EPF_WAGE_CEILING = 15000;
 export const PPF_RATE = 7.1;
 export const PPF_YEARS = 15;
 export const PPF_MAX_YEARLY = 150000;
+
+/** Small savings rates, for the current quarter. Reset every three months. */
+export const SMALL_SAVINGS_CHECKED = "Oct–Dec 2026";
+export const SSY_RATE = 8.2;
+export const SSY_MAX_YEARLY = 150000;
+export const EPF_RATE = 8.25;
+/** The pension scheme's share, capped at 8.33% of ₹15,000 a month. */
+export const EPS_MAX_MONTHLY = 1250;
+/** Gratuity above this is taxed, however long you served. */
+export const GRATUITY_TAX_FREE = 2000000;
+/** Long-term gains on listed equity up to this, a year, are tax free. */
+export const LTCG_EQUITY_EXEMPT = 125000;
 
 /* ── Small helpers ─────────────────────────────────────────────── */
 
@@ -96,21 +116,32 @@ export type TaxBreakdown = {
  */
 export function incomeTax(salary: number, regime: "new" | "old", deductions = 0): TaxBreakdown {
   const sd = regime === "new" ? NEW_STANDARD_DEDUCTION : OLD_STANDARD_DEDUCTION;
-  const taxable = pos(salary - sd - (regime === "old" ? deductions : 0));
+  return taxOnIncome(salary - sd - (regime === "old" ? deductions : 0), regime);
+}
+
+/**
+ * Tax on an income that is already net of every deduction: slabs, the
+ * rebate, marginal relief, surcharge and cess.
+ *
+ * The rebate is for residents only. A non-resident with ₹10 lakh of
+ * Indian income pays tax on it where a resident would pay nothing.
+ */
+export function taxOnIncome(income: number, regime: "new" | "old", resident = true): TaxBreakdown {
+  const taxable = pos(income);
   const slabs = regime === "new" ? NEW_SLABS : OLD_SLABS;
 
   const beforeRebate = slabTax(taxable, slabs);
 
   let rebate = 0;
-  if (regime === "new" && taxable <= NEW_REBATE_LIMIT) rebate = beforeRebate;
-  if (regime === "old" && taxable <= OLD_REBATE_LIMIT) rebate = Math.min(beforeRebate, OLD_REBATE_CAP);
+  if (resident && regime === "new" && taxable <= NEW_REBATE_LIMIT) rebate = beforeRebate;
+  if (resident && regime === "old" && taxable <= OLD_REBATE_LIMIT) rebate = Math.min(beforeRebate, OLD_REBATE_CAP);
 
   let afterRebate = beforeRebate - rebate;
 
   // Marginal relief: just past the rebate limit, the tax cannot exceed
   // the income that took you over it. Without this, one extra rupee of
   // income can cost tens of thousands.
-  if (regime === "new" && taxable > NEW_REBATE_LIMIT) {
+  if (resident && regime === "new" && taxable > NEW_REBATE_LIMIT) {
     afterRebate = Math.min(afterRebate, taxable - NEW_REBATE_LIMIT);
   }
 
@@ -537,6 +568,644 @@ export function fire(opts: {
     if (corpus >= target) return { target, months: m, reachable: true, corpus };
   }
   return { target, months: cap, reachable: false, corpus };
+}
+
+/* ── Salary extras ─────────────────────────────────────────────── */
+
+/**
+ * The exempt part of HRA: the smallest of what you were paid, rent above
+ * a tenth of basic, and half of basic (40% outside the metros). Only the
+ * old regime lets you claim it.
+ */
+export function hraExemption(basic: number, hra: number, rent: number, metro: boolean) {
+  const overTenth = pos(rent - basic * 0.1);
+  const share = basic * (metro ? 0.5 : 0.4);
+  const exempt = Math.min(hra, overTenth, share);
+  const limitedBy =
+    exempt === hra ? ("hra" as const) : exempt === overTenth ? ("rent" as const) : ("share" as const);
+  return { exempt, taxable: pos(hra - exempt), overTenth, share, limitedBy };
+}
+
+/**
+ * Gratuity. Under the Act it is 15 days' pay for every year, on a 26-day
+ * month, and a final part-year of more than six months counts as a year.
+ * Outside it, a 30-day month and completed years only.
+ */
+export function gratuity(monthlyPay: number, years: number, months: number, covered: boolean) {
+  const countedYears = covered ? years + (months > 6 ? 1 : 0) : years;
+  const amount = (monthlyPay * 15 * countedYears) / (covered ? 26 : 30);
+  return {
+    amount,
+    countedYears,
+    taxFree: Math.min(amount, GRATUITY_TAX_FREE),
+    taxable: pos(amount - GRATUITY_TAX_FREE),
+  };
+}
+
+/**
+ * Tax on a capital gain, under the rates from 23 July 2024.
+ *
+ * Listed equity and equity funds are long term after a year: 12.5% above
+ * the yearly exemption, 20% if sold sooner. Property, gold and most other
+ * assets are long term after two years at 12.5% with no indexation, and
+ * taxed at your slab if sold sooner. Cess on top; surcharge is left out.
+ */
+export function capitalGains(opts: {
+  asset: "equity" | "other";
+  bought: number;
+  sold: number;
+  monthsHeld: number;
+  slabPct: number;
+  exemptionUsed: number;
+}) {
+  const { asset, bought, sold, monthsHeld, slabPct, exemptionUsed } = opts;
+  const gain = sold - bought;
+  const longTerm = monthsHeld > (asset === "equity" ? 12 : 24);
+  if (gain <= 0) return { gain, longTerm, exempt: 0, taxable: 0, rate: 0, tax: 0 };
+
+  let exempt = 0;
+  let rate: number;
+  if (asset === "equity") {
+    rate = longTerm ? 12.5 : 20;
+    if (longTerm) exempt = Math.min(gain, pos(LTCG_EQUITY_EXEMPT - exemptionUsed));
+  } else {
+    rate = longTerm ? 12.5 : slabPct;
+  }
+  const taxable = gain - exempt;
+  const tax = taxable * (rate / 100) * (1 + CESS);
+  return { gain, longTerm, exempt, taxable, rate, tax };
+}
+
+/* ── Government schemes ────────────────────────────────────────── */
+
+/**
+ * EPF, run month by month. Interest is worked out monthly on the running
+ * balance and credited once a year, which is how EPFO does it. Of the
+ * employer's 12%, up to ₹1,250 a month goes to the pension scheme and
+ * never reaches this balance.
+ */
+export function epf(opts: {
+  monthlyBasic: number;
+  age: number;
+  retireAge: number;
+  balance: number;
+  raisePct: number;
+  ratePct: number;
+  pfBase: PfBase;
+}) {
+  const { age, retireAge, balance, raisePct, ratePct, pfBase } = opts;
+  const i = ratePct / 100 / 12;
+  let basic = opts.monthlyBasic;
+  let total = balance;
+  let mine = 0;
+  let employer = 0;
+  const years = pos(Math.round(retireAge - age));
+
+  for (let y = 0; y < years; y++) {
+    const wage = pfBase === "ceiling" ? Math.min(basic, EPF_WAGE_CEILING) : basic;
+    const eps = Math.min(Math.min(basic, EPF_WAGE_CEILING) * 0.0833, EPS_MAX_MONTHLY);
+    const fromYou = wage * 0.12;
+    const fromThem = pos(wage * 0.12 - eps);
+    let interest = 0;
+    for (let m = 0; m < 12; m++) {
+      total += fromYou + fromThem;
+      interest += total * i;
+    }
+    total += interest;
+    mine += fromYou * 12;
+    employer += fromThem * 12;
+    basic *= 1 + raisePct / 100;
+  }
+  const invested = balance + mine + employer;
+  return { future: total, mine, employer, opening: balance, interest: total - invested, years };
+}
+
+/**
+ * NPS: a monthly contribution until 60, then part of the corpus buys an
+ * annuity that pays the pension, and the rest can be taken as a lump sum.
+ */
+export function nps(opts: {
+  monthly: number;
+  age: number;
+  retireAge: number;
+  balance: number;
+  returnPct: number;
+  annuityPct: number;
+  annuityRatePct: number;
+}) {
+  const { monthly, age, retireAge, balance, returnPct, annuityPct, annuityRatePct } = opts;
+  const years = pos(retireAge - age);
+  const grown = sip(monthly, years, returnPct);
+  const corpus = grown.future + balance * Math.pow(1 + returnPct / 100, years);
+  const annuity = corpus * (annuityPct / 100);
+  return {
+    years,
+    corpus,
+    invested: grown.invested + balance,
+    lumpSum: corpus - annuity,
+    annuity,
+    pension: (annuity * (annuityRatePct / 100)) / 12,
+  };
+}
+
+/**
+ * Sukanya Samriddhi. Deposits for the first fifteen years, then the
+ * balance keeps earning until the account is 21 years old.
+ */
+export function ssy(yearly: number, ratePct = SSY_RATE) {
+  let balance = 0;
+  for (let y = 1; y <= 21; y++) balance = (balance + (y <= 15 ? yearly : 0)) * (1 + ratePct / 100);
+  const invested = yearly * 15;
+  return { invested, future: balance, gain: balance - invested };
+}
+
+export type PostOfficeScheme = "mis" | "scss" | "nsc" | "kvp" | "td";
+
+/** The post office schemes, at this quarter's rates. */
+export const POST_OFFICE: Record<
+  PostOfficeScheme,
+  { name: string; rate: number; years: number; max: number; pays: "monthly" | "quarterly" | "yearly" | "maturity" }
+> = {
+  mis: { name: "Monthly Income Scheme", rate: 7.4, years: 5, max: 900000, pays: "monthly" },
+  scss: { name: "Senior Citizens Savings Scheme", rate: 8.2, years: 5, max: 3000000, pays: "quarterly" },
+  nsc: { name: "National Savings Certificate", rate: 7.7, years: 5, max: Infinity, pays: "maturity" },
+  kvp: { name: "Kisan Vikas Patra", rate: 7.5, years: 115 / 12, max: Infinity, pays: "maturity" },
+  td: { name: "5-year Time Deposit", rate: 7.5, years: 5, max: Infinity, pays: "yearly" },
+};
+
+/**
+ * What a post office scheme pays. MIS, SCSS and the time deposit pay the
+ * interest out and hand the deposit back at the end; the time deposit
+ * works it out quarterly but pays it once a year. NSC compounds yearly
+ * to maturity, and KVP doubles on a fixed date.
+ */
+export function postOffice(scheme: PostOfficeScheme, amount: number, ratePct: number) {
+  const s = POST_OFFICE[scheme];
+  if (s.pays !== "maturity") {
+    const perYear =
+      s.pays === "yearly" ? amount * (Math.pow(1 + ratePct / 400, 4) - 1) : amount * (ratePct / 100);
+    const payout = s.pays === "monthly" ? perYear / 12 : s.pays === "quarterly" ? perYear / 4 : perYear;
+    const interest = perYear * s.years;
+    return { years: s.years, payout, interest, future: amount + interest };
+  }
+  const future = scheme === "kvp" ? amount * 2 : amount * Math.pow(1 + ratePct / 100, s.years);
+  return { years: s.years, payout: 0, interest: future - amount, future };
+}
+
+/* ── More saving and borrowing ─────────────────────────────────── */
+
+/**
+ * A recurring deposit: a fixed amount every month, compounded quarterly
+ * the way banks do it, each instalment for the months it was in.
+ */
+export function rd(monthly: number, years: number, ratePct: number) {
+  const n = Math.round(years * 12);
+  let future = 0;
+  for (let k = 1; k <= n; k++) future += monthly * Math.pow(1 + ratePct / 400, k / 3);
+  const invested = monthly * n;
+  return { invested, future, gain: future - invested };
+}
+
+/**
+ * Moving a loan to a cheaper lender, for the same remaining tenure.
+ * The fees are paid up front, so the saving has to clear them first.
+ */
+export function balanceTransfer(
+  outstanding: number,
+  remainingYears: number,
+  oldRatePct: number,
+  newRatePct: number,
+  fees: number,
+) {
+  const before = emi(outstanding, remainingYears, oldRatePct);
+  const after = emi(outstanding, remainingYears, newRatePct);
+  const emiSaved = before.monthly - after.monthly;
+  const saving = before.interest - after.interest - fees;
+  const breakEven = emiSaved > 0 ? Math.ceil(fees / emiSaved) : Infinity;
+  return {
+    oldEmi: before.monthly,
+    newEmi: after.monthly,
+    oldInterest: before.interest,
+    newInterest: after.interest,
+    emiSaved,
+    saving,
+    breakEven,
+    worth: saving > 0,
+  };
+}
+
+/* ── More tax ──────────────────────────────────────────────────── */
+
+/** The year advance tax is being paid for: the same year as the slabs. */
+export const ADVANCE_TAX_YEAR = TAX_YEAR;
+/** Below this much tax left after TDS, advance tax is not required. */
+export const ADVANCE_TAX_THRESHOLD = 10000;
+
+/** Cumulative share of the year's tax due by each date. */
+export const ADVANCE_TAX_DATES: { date: string; iso: string; share: number; monthsLate: number }[] = [
+  { date: `15 June ${TAX_YEAR_START}`, iso: `${TAX_YEAR_START}-06-15`, share: 0.15, monthsLate: 3 },
+  { date: `15 September ${TAX_YEAR_START}`, iso: `${TAX_YEAR_START}-09-15`, share: 0.45, monthsLate: 3 },
+  { date: `15 December ${TAX_YEAR_START}`, iso: `${TAX_YEAR_START}-12-15`, share: 0.75, monthsLate: 3 },
+  { date: `15 March ${TAX_YEAR_START + 1}`, iso: `${TAX_YEAR_START + 1}-03-15`, share: 1, monthsLate: 1 },
+];
+
+/**
+ * Advance tax: what is due, by when, and roughly what skipping it costs.
+ *
+ * Salary gets the standard deduction; other income (interest, rent after
+ * its 30%, freelance profit) is added as it is. If you pay nothing until
+ * you file, interest is 1% a month on each missed instalment for three
+ * months (one for March), plus 1% a month on the whole shortfall from
+ * April until you pay. That second part is counted to 31 July here.
+ */
+export function advanceTax(opts: {
+  salary: number;
+  other: number;
+  regime: "new" | "old";
+  deductions: number;
+  tds: number;
+  presumptive: boolean;
+}) {
+  const { salary, other, regime, deductions, tds, presumptive } = opts;
+  const sd = salary > 0 ? Math.min(salary, regime === "new" ? NEW_STANDARD_DEDUCTION : OLD_STANDARD_DEDUCTION) : 0;
+  const tax = taxOnIncome(salary - sd + other - (regime === "old" ? deductions : 0), regime);
+  const net = pos(tax.total - tds);
+  const due = net >= ADVANCE_TAX_THRESHOLD;
+
+  const schedule = presumptive
+    ? [{ ...ADVANCE_TAX_DATES[3], amount: net }]
+    : ADVANCE_TAX_DATES.map((d) => ({ ...d, amount: net * d.share }));
+
+  // What paying nothing until 31 July costs.
+  const missed = presumptive
+    ? net * 0.01
+    : ADVANCE_TAX_DATES.reduce((sum, d) => sum + net * d.share * 0.01 * d.monthsLate, 0);
+  const shortfall = net * 0.01 * 4;
+  return { tax, net, due, schedule, interestIfSkipped: due ? missed + shortfall : 0 };
+}
+
+/** Receipts up to this qualify for presumptive tax if almost all come by bank. */
+export const PRESUMPTIVE_LIMIT = 7500000;
+/** The lower limit, when more than 5% of receipts come in cash. */
+export const PRESUMPTIVE_LIMIT_CASH = 5000000;
+
+/**
+ * A freelancer's or professional's tax, two ways: declaring half the
+ * receipts as profit under the presumptive scheme (the old 44ADA), or
+ * keeping books and paying on actual profit.
+ */
+export function freelanceTax(opts: {
+  receipts: number;
+  expenses: number;
+  regime: "new" | "old";
+  deductions: number;
+  mostlyBank: boolean;
+}) {
+  const { receipts, expenses, regime, deductions, mostlyBank } = opts;
+  const less = regime === "old" ? deductions : 0;
+  const eligible = receipts <= (mostlyBank ? PRESUMPTIVE_LIMIT : PRESUMPTIVE_LIMIT_CASH);
+  const presumptiveProfit = receipts / 2;
+  const actualProfit = pos(receipts - expenses);
+  const presumptive = taxOnIncome(presumptiveProfit - less, regime);
+  const books = taxOnIncome(actualProfit - less, regime);
+  return {
+    eligible,
+    presumptiveProfit,
+    actualProfit,
+    presumptive,
+    books,
+    better: eligible && presumptive.total <= books.total ? ("presumptive" as const) : ("books" as const),
+  };
+}
+
+export type Residency = "ROR" | "RNOR" | "NR";
+
+/**
+ * Residential status for a tax year, from days spent in India.
+ *
+ * Resident if in India 182 days or more, or 60 days plus 365 across the
+ * previous four years. For an Indian citizen or person of Indian origin
+ * living abroad, that 60 becomes 182, or 120 when Indian income is above
+ * ₹15 lakh. A citizen with Indian income above ₹15 lakh who pays tax
+ * nowhere else is deemed resident. Residents who were non-resident in 9
+ * of the last 10 years, or spent 729 days or fewer here in the last 7,
+ * are "not ordinarily resident" and taxed only on Indian income.
+ */
+export function residency(opts: {
+  days: number;
+  daysLast4: number;
+  indian: boolean;
+  indianIncome: number;
+  taxedAbroad: boolean;
+  nrYearsOf10: number;
+  daysLast7: number;
+}) {
+  const { days, daysLast4, indian, indianIncome, taxedAbroad, nrYearsOf10, daysLast7 } = opts;
+  const highIncome = indianIncome > 1500000;
+  const secondTest = indian ? (highIncome ? 120 : 182) : 60;
+
+  const byDays = days >= 182 || (days >= secondTest && daysLast4 >= 365);
+  const deemed = !byDays && indian && highIncome && !taxedAbroad;
+  const via120 = byDays && days < 182 && indian && highIncome;
+
+  let status: Residency = "NR";
+  let reason = "";
+  if (byDays) {
+    const notOrdinarily = nrYearsOf10 >= 9 || daysLast7 <= 729 || via120;
+    status = notOrdinarily ? "RNOR" : "ROR";
+    reason =
+      days >= 182
+        ? `${days} days in India is 182 or more.`
+        : `${days} days this year plus ${daysLast4} in the last four years.`;
+    if (notOrdinarily) {
+      reason += via120
+        ? " Resident through the 120-day rule, which makes you not ordinarily resident."
+        : nrYearsOf10 >= 9
+          ? " You were non-resident in 9 of the last 10 years, so not ordinarily resident."
+          : " You spent 729 days or fewer here in the last 7 years, so not ordinarily resident.";
+    }
+  } else if (deemed) {
+    status = "RNOR";
+    reason = "Indian income above ₹15 lakh and no tax paid where you live, so you are deemed resident.";
+  } else {
+    reason =
+      days >= secondTest
+        ? `Fewer than 365 days in India over the last four years, so ${days} days is not enough.`
+        : secondTest === 182
+          ? `${days} days is below 182.`
+          : `${days} days is below both the 182-day test and the ${secondTest}-day test.`;
+  }
+
+  // Indian income only, under the new regime. Non-residents get no rebate.
+  const tax = taxOnIncome(indianIncome, "new", status !== "NR");
+  return { status, reason, secondTest, tax };
+}
+
+/**
+ * Booking long-term equity gains each year up to the tax-free limit, and
+ * buying straight back. The gain is the same; the tax on it later is not.
+ */
+export function taxHarvest(unrealised: number, booked: number, years: number) {
+  const room = pos(LTCG_EQUITY_EXEMPT - booked);
+  const book = Math.min(pos(unrealised), room);
+  const savedNow = book * 0.125 * (1 + CESS);
+  return { room, book, savedNow, savedOverYears: LTCG_EQUITY_EXEMPT * 0.125 * (1 + CESS) * years };
+}
+
+/** GST added to a price, or taken back out of one that includes it. */
+export function gst(amount: number, ratePct: number, mode: "add" | "remove") {
+  const base = mode === "add" ? amount : amount / (1 + ratePct / 100);
+  const tax = base * (ratePct / 100);
+  return { base, tax, total: base + tax };
+}
+
+/* ── Atal Pension Yojana ───────────────────────────────────────── */
+
+/**
+ * The official monthly contribution chart: one row per joining age, 18 to
+ * 40, one column per pension of ₹1,000 to ₹5,000 a month.
+ */
+const APY_CHART: number[][] = [
+  [42, 84, 126, 168, 210],
+  [46, 92, 138, 183, 228],
+  [50, 100, 150, 198, 248],
+  [54, 108, 162, 215, 269],
+  [59, 117, 177, 234, 292],
+  [64, 127, 192, 254, 318],
+  [70, 139, 208, 277, 346],
+  [76, 151, 226, 301, 376],
+  [82, 164, 246, 327, 409],
+  [90, 178, 268, 356, 446],
+  [97, 194, 292, 388, 485],
+  [106, 212, 318, 423, 529],
+  [116, 231, 347, 462, 577],
+  [126, 252, 379, 504, 630],
+  [138, 276, 414, 551, 689],
+  [151, 302, 453, 602, 752],
+  [165, 330, 495, 659, 824],
+  [181, 362, 543, 722, 902],
+  [198, 396, 594, 792, 990],
+  [218, 436, 654, 870, 1087],
+  [240, 480, 720, 957, 1196],
+  [264, 528, 792, 1054, 1318],
+  [291, 582, 873, 1164, 1454],
+];
+
+/** What the nominee gets back, per ₹1,000 of monthly pension. */
+const APY_CORPUS_PER_1000 = 170000;
+
+export function apy(age: number, pension: number) {
+  const a = Math.min(40, Math.max(18, Math.round(age)));
+  const col = Math.min(5, Math.max(1, Math.round(pension / 1000))) - 1;
+  const monthly = APY_CHART[a - 18][col];
+  const years = 60 - a;
+  const paid = monthly * 12 * years;
+  const corpus = (col + 1) * APY_CORPUS_PER_1000;
+  // The same money in PPF instead, to show what the guarantee costs.
+  const elsewhere = sip(monthly, years, PPF_RATE).future;
+  return { monthly, years, paid, corpus, elsewhere, pension: (col + 1) * 1000 };
+}
+
+/* ── Returns on irregular money ────────────────────────────────── */
+
+export type Flow = { date: string; amount: number };
+
+/**
+ * The yearly return on money that went in and out on different dates.
+ * Payments in are negative and money back is positive, as in a
+ * spreadsheet. Solved by bisection, which is slower than Newton's method
+ * but cannot fly off on awkward cash flows.
+ */
+export function xirr(flows: Flow[]) {
+  const dated = flows
+    .map((f) => ({ t: new Date(f.date).getTime(), amount: f.amount }))
+    .filter((f) => Number.isFinite(f.t) && f.amount !== 0);
+  if (dated.length < 2 || !dated.some((f) => f.amount > 0) || !dated.some((f) => f.amount < 0)) return NaN;
+
+  const t0 = Math.min(...dated.map((f) => f.t));
+  const npv = (r: number) =>
+    dated.reduce((sum, f) => sum + f.amount / Math.pow(1 + r, (f.t - t0) / (365 * 86400000)), 0);
+
+  let lo = -0.9999;
+  let hi = 10;
+  if (npv(lo) * npv(hi) > 0) return NaN;
+  for (let i = 0; i < 200; i++) {
+    const mid = (lo + hi) / 2;
+    if (npv(lo) * npv(mid) <= 0) hi = mid;
+    else lo = mid;
+  }
+  return ((lo + hi) / 2) * 100;
+}
+
+/* ── Loans, in more detail ─────────────────────────────────────── */
+
+/** Interest and principal paid in each year of a loan. */
+export function amortise(principal: number, years: number, ratePct: number) {
+  const { monthly, months } = emi(principal, years, ratePct);
+  const i = monthlyRate(ratePct);
+  const rows: { year: number; interest: number; principal: number; balance: number }[] = [];
+  let balance = principal;
+  for (let m = 0; m < months; m++) {
+    if (m % 12 === 0) rows.push({ year: m / 12 + 1, interest: 0, principal: 0, balance });
+    const interest = balance * i;
+    const row = rows[rows.length - 1];
+    row.interest += interest;
+    row.principal += monthly - interest;
+    balance -= monthly - interest;
+    row.balance = pos(balance);
+  }
+  return rows;
+}
+
+/** Interest on a self-occupied home you can claim in the old regime. */
+export const HOME_LOAN_INTEREST_CAP = 200000;
+
+/** A home loan, with what the old regime gives back in the first year. */
+export function homeLoan(opts: { price: number; downPct: number; years: number; ratePct: number; slabPct: number }) {
+  const { price, downPct, years, ratePct, slabPct } = opts;
+  const loan = price * (1 - downPct / 100);
+  const e = emi(loan, years, ratePct);
+  const first = amortise(loan, years, ratePct)[0];
+  const deductible = Math.min(first.interest, HOME_LOAN_INTEREST_CAP) + Math.min(first.principal, PPF_MAX_YEARLY);
+  const taxSaved = deductible * (slabPct / 100) * (1 + CESS);
+  return { loan, ...e, first, taxSaved };
+}
+
+/**
+ * A car loan. Dealers often quote a flat rate, charged on the whole
+ * amount for the whole term even as you pay it down; this finds the
+ * reducing rate that flat rate really is.
+ */
+export function carLoan(opts: { price: number; down: number; years: number; ratePct: number; flat: boolean }) {
+  const { price, down, years, ratePct, flat } = opts;
+  const loan = pos(price - down);
+  const months = Math.round(years * 12);
+  let monthly: number;
+  let interest: number;
+  if (flat) {
+    interest = loan * (ratePct / 100) * years;
+    monthly = (loan + interest) / months;
+  } else {
+    const e = emi(loan, years, ratePct);
+    monthly = e.monthly;
+    interest = e.interest;
+  }
+  // The reducing rate that gives this EMI.
+  let lo = 0;
+  let hi = 100;
+  for (let i = 0; i < 100; i++) {
+    const mid = (lo + hi) / 2;
+    if (emi(loan, years, mid).monthly < monthly) lo = mid;
+    else hi = mid;
+  }
+  return { loan, monthly, interest, months, effectiveRate: flat ? (lo + hi) / 2 : ratePct };
+}
+
+/* ── Strategies ────────────────────────────────────────────────── */
+
+/**
+ * A SIP split between a cheap index core and a satellite of active or
+ * thematic picks, against putting all of it in the core.
+ */
+export function coreSatellite(opts: {
+  monthly: number;
+  years: number;
+  corePct: number;
+  coreReturn: number;
+  satelliteReturn: number;
+}) {
+  const { monthly, years, corePct, coreReturn, satelliteReturn } = opts;
+  const core = sip(monthly * (corePct / 100), years, coreReturn).future;
+  const satellite = sip(monthly * (1 - corePct / 100), years, satelliteReturn).future;
+  const allCore = sip(monthly, years, coreReturn).future;
+  return { core, satellite, total: core + satellite, allCore, difference: core + satellite - allCore };
+}
+
+/**
+ * Splitting a retirement corpus into three buckets: cash for the next
+ * few years, steady debt for the years after, and equity for the rest,
+ * which has a decade to grow before it is needed.
+ */
+export function threeBuckets(opts: {
+  corpus: number;
+  monthlySpend: number;
+  inflationPct: number;
+  cashYears: number;
+  debtYears: number;
+  debtReturn: number;
+  equityReturn: number;
+}) {
+  const { corpus, monthlySpend, inflationPct, cashYears, debtYears, debtReturn, equityReturn } = opts;
+  const yearSpend = (y: number) => monthlySpend * 12 * Math.pow(1 + inflationPct / 100, y);
+  let cash = 0;
+  for (let y = 0; y < cashYears; y++) cash += yearSpend(y);
+  let debt = 0;
+  for (let y = cashYears; y < cashYears + debtYears; y++) {
+    debt += yearSpend(y) / Math.pow(1 + debtReturn / 100, y - cashYears + 1);
+  }
+  const equity = corpus - cash - debt;
+  const untouched = cashYears + debtYears;
+  return {
+    cash,
+    debt,
+    equity,
+    enough: equity > 0,
+    untouched,
+    equityLater: pos(equity) * Math.pow(1 + equityReturn / 100, untouched),
+  };
+}
+
+/**
+ * Buying and leaving it, against switching to something else every few
+ * months. Each switch pays tax on the gain so far plus costs, so less is
+ * left compounding; the holder pays tax once, at the end. Switching
+ * within a year is short-term, at 20%. The ₹1.25 lakh yearly exemption is
+ * left out of both, since it is shared with everything else you sell.
+ */
+export function coffeeCan(opts: { amount: number; years: number; ratePct: number; costPct: number; switchMonths: number }) {
+  const { amount, years, ratePct, costPct, switchMonths } = opts;
+  const taxRate = (switchMonths > 12 ? 0.125 : 0.2) * (1 + CESS);
+
+  const held = amount * Math.pow(1 + ratePct / 100, years);
+  const heldAfterTax = held - pos(held - amount) * 0.125 * (1 + CESS);
+
+  const rounds = Math.floor((years * 12) / switchMonths);
+  const perRound = Math.pow(1 + ratePct / 100, switchMonths / 12);
+  let churned = amount;
+  let taxPaid = 0;
+  let costs = 0;
+  for (let i = 0; i < rounds; i++) {
+    const grown = churned * perRound;
+    const tax = pos(grown - churned) * taxRate;
+    const cost = grown * (costPct / 100);
+    taxPaid += tax;
+    costs += cost;
+    churned = grown - tax - cost;
+  }
+  // Any months left over after the last switch just grow, then pay tax on exit.
+  const tail = Math.pow(1 + ratePct / 100, (years * 12 - rounds * switchMonths) / 12);
+  const end = churned * tail;
+  const churnedAfterTax = end - pos(end - churned) * taxRate;
+  return { held, heldAfterTax, churned: churnedAfterTax, taxPaid, costs, gap: heldAfterTax - churnedAfterTax, rounds };
+}
+
+/**
+ * A factor (smart beta) index fund against a plain index fund. Returns
+ * are before costs; the factor fund has to beat the plain index by more
+ * than the extra it charges just to break even.
+ */
+export function factorVsIndex(opts: {
+  monthly: number;
+  years: number;
+  indexReturn: number;
+  indexCost: number;
+  factorEdge: number;
+  factorCost: number;
+}) {
+  const { monthly, years, indexReturn, indexCost, factorEdge, factorCost } = opts;
+  const plain = sip(monthly, years, indexReturn - indexCost).future;
+  const factor = sip(monthly, years, indexReturn + factorEdge - factorCost).future;
+  return { plain, factor, difference: factor - plain, breakEvenEdge: factorCost - indexCost };
 }
 
 /* ── Formatting ────────────────────────────────────────────────── */

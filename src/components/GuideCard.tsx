@@ -5,7 +5,7 @@ export function GuideCard({ guide, compact = false, className = "" }: { guide: G
   return (
     <Link
       href={guideHref(guide.slug)}
-      className={`group flex flex-col overflow-hidden rounded-2xl border border-line bg-white transition-shadow hover:shadow-lg ${className}`}
+      className={`group flex flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-shadow hover:shadow-lg ${className}`}
     >
       <span className="block border-b border-line bg-card p-5 md:p-7">
         <span className="kicker block text-green">{guide.topic}</span>

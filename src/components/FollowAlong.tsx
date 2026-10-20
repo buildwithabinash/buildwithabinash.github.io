@@ -47,14 +47,14 @@ export function FollowAlong() {
               "flex items-center gap-3.5 rounded-2xl px-[18px] py-4 transition-colors md:flex-col md:items-start md:gap-0 md:p-6";
             const skin = primary
               ? "on-dark bg-midnight text-paper hover:bg-midnight-2"
-              : "border border-line bg-white text-ink hover:border-green";
+              : "border border-line bg-surface text-ink hover:border-green";
 
             return s.url ? (
               <a key={s.id} href={s.url} target="_blank" rel="noopener noreferrer" className={`${base} ${skin}`}>
                 {inner}
               </a>
             ) : (
-              <div key={s.id} className={`${base} border border-line bg-white text-ink opacity-60`}>
+              <div key={s.id} className={`${base} border border-line bg-surface text-ink opacity-60`}>
                 {inner}
               </div>
             );
@@ -64,7 +64,7 @@ export function FollowAlong() {
         {/* The survey sits here rather than in the nav: this is the section
             about staying in touch, and it is one row rather than another
             section on an already long page. */}
-        <div className="mt-2.5 flex flex-col gap-4 rounded-2xl border border-line bg-white px-5 py-5 md:mt-4 md:flex-row md:items-center md:justify-between md:px-7 md:py-6">
+        <div className="mt-2.5 flex flex-col gap-4 rounded-2xl border border-line bg-surface px-5 py-5 md:mt-4 md:flex-row md:items-center md:justify-between md:px-7 md:py-6">
           <div>
             <p className="font-serif text-lg font-bold text-ink md:text-xl">What should I cover next?</p>
             <p className="mt-1 text-sm leading-relaxed text-muted md:text-[15px]">

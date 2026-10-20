@@ -4,7 +4,7 @@ import { FollowAlong } from "@/components/FollowAlong";
 import { GuideCard } from "@/components/GuideCard";
 import { Hero } from "@/components/Hero";
 import { TopicIcon } from "@/components/Icons";
-import { featuredTools, toolHref, tools, toolsForStep } from "@/lib/tools";
+import { featuredTools, moduleForStep, toolHref, tools, toolsForStep } from "@/lib/tools";
 import { guides, guidesInTopic, steps, topics } from "@/lib/guides";
 
 const pillars = [
@@ -67,7 +67,7 @@ export default function Home() {
                             home page shows four calculators in total; the rest
                             live on /tools/, where this lands on the group. */}
                         {stepTools.length > 0 && (
-                          <Link href={`/tools/#${s.id}`} className="text-green hover:underline">
+                          <Link href={`/tools/#${moduleForStep[s.id]}`} className="text-green hover:underline">
                             {stepTools.length} {stepTools.length === 1 ? "calculator" : "calculators"} →
                           </Link>
                         )}
@@ -108,7 +108,7 @@ export default function Home() {
       </section>
 
       {/* Topics */}
-      <section className="border-y border-line bg-white">
+      <section className="border-y border-line bg-surface">
         <div className="mx-auto max-w-6xl px-5 py-10 md:px-6 md:py-20">
           <h2 className="font-serif text-2xl font-bold text-ink md:text-[34px]">Browse by topic</h2>
           <div className="mt-4 grid grid-cols-2 gap-2.5 md:mt-8 md:grid-cols-3 md:gap-4">

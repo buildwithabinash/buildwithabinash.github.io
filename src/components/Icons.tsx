@@ -27,6 +27,8 @@ export const Close = (p: P) => (<Base {...p}><path d="M6 6l12 12M18 6 6 18" /></
 export const Download = (p: P) => (<Base {...p}><path d="M12 3v12" /><path d="m7 10 5 5 5-5" /><path d="M5 21h14" /></Base>);
 export const Share = (p: P) => (<Base {...p}><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4" /></Base>);
 export const Search = (p: P) => (<Base {...p}><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></Base>);
+export const Sun = (p: P) => (<Base {...p}><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></Base>);
+export const Moon = (p: P) => (<Base {...p}><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" /></Base>);
 export const Arrow = (p: P) => (<Base {...p}><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></Base>);
 
 export const Instagram = (p: P) => (<Base {...p}><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><path d="M17.5 6.5h.01" /></Base>);

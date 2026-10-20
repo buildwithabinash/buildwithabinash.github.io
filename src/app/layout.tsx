@@ -7,6 +7,8 @@ import "@fontsource/poppins/600.css";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Analytics } from "@/components/Analytics";
+import { ServiceWorker } from "@/components/ServiceWorker";
 import { JsonLd } from "@/components/JsonLd";
 import { graph, personSchema, websiteSchema } from "@/lib/schema";
 import { site } from "@/lib/site";
@@ -49,7 +51,18 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-IN">
+    // suppressHydrationWarning: the script below may set data-theme on
+    // <html> before React hydrates, which is intended.
+    <html lang="en-IN" suppressHydrationWarning>
+      <head>
+        {/* Runs before the first paint, so a saved theme never flashes
+            the other one first. With nothing saved, the device decides. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`,
+          }}
+        />
+      </head>
       {/* Extensions like Grammarly add attributes to <body> before React
           hydrates, which React then reports as a mismatch. This silences that
           for this element only; mismatches inside the tree still surface. */}
@@ -57,13 +70,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <JsonLd data={graph(personSchema, websiteSchema)} />
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-full focus:bg-paper focus:px-4 focus:py-2 focus:text-ink"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-full focus:bg-paper focus:px-4 focus:py-2 focus:text-midnight"
         >
           Skip to content
         </a>
         <Header />
-        <main id="main" className="pt-[74px] md:pt-[88px]">{children}</main>
+        {/* tabIndex -1: the skip link moves keyboard focus here, not just the scroll. */}
+        <main id="main" tabIndex={-1} className="pt-[74px] outline-none md:pt-[88px]">
+          {children}
+        </main>
         <Footer />
+        <Analytics />
+        <ServiceWorker />
       </body>
     </html>
   );

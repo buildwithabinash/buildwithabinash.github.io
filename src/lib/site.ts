@@ -39,6 +39,28 @@ export const site = {
 export const surveyEndpoint: string | null = "https://formspree.io/f/xdeazddb";
 
 /**
+ * A mailto link for reporting a mistake on a page. Only the page's address
+ * goes in, never the part after "?", which on a calculator holds the
+ * visitor's numbers; they can add those themselves if they want to.
+ */
+export function reportErrorHref(path: string, title: string) {
+  const subject = `Mistake on: ${title}`;
+  const body = `Page: ${site.url}${path}\n\nWhat looks wrong, and what you expected:\n\n`;
+  return `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+/**
+ * Visitor counts, through GoatCounter: open source, no cookies, no personal
+ * data, free for a site like this one.
+ *
+ * To switch it on: sign up at goatcounter.com and pick a code (the part
+ * before .goatcounter.com), then paste it here, e.g. "buildwithabinash".
+ * While this is null no script loads at all. Only the page path is sent,
+ * never the address after "?", which on a calculator holds someone's numbers.
+ */
+export const goatcounterCode: string | null = null;
+
+/**
  * The default social card. Next replaces the whole openGraph object when a page
  * defines its own, rather than merging, so any page that sets openGraph has to
  * pass images through or it ships a summary_large_image card with nothing in it.

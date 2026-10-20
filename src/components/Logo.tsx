@@ -5,7 +5,7 @@ export function Logo({ className = "", markSize = 30 }: { className?: string; ma
   return (
     <Link
       href="/"
-      aria-label="Build with Abinash, home"
+      aria-label="buildwithabinash, home"
       className={`inline-flex items-center gap-2.5 font-serif text-xl font-bold text-paper md:text-[22px] ${className}`}
     >
       <BrandMark size={markSize} />

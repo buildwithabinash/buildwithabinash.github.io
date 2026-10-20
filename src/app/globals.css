@@ -14,7 +14,17 @@
   --color-line: #e5e3db;
   --color-rule: #d8d5ca;
   --color-rose: #fbefef;
+  /* Borders for mint and rose panels */
+  --color-mint-line: #cfe3d8;
+  --color-rose-line: #e8cccc;
   --color-alert: #a33a3a;
+  /* Cards, inputs and bars: white here, a raised green-black in dark mode */
+  --color-surface: #ffffff;
+  /* Green as a fill under white text, as opposed to green as text. The
+     two split in dark mode: text turns light, fills stay dark enough for
+     white on top. */
+  --color-fill: #1a6b54;
+  --color-fill-deep: #124a3a;
 
   /* Dark: from the Midnight carousel theme */
   --color-midnight: #0c1712;
@@ -33,6 +43,69 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  color-scheme: light;
+}
+
+/* ───────────────────────────────────────────────────────────────
+   Dark mode, following the device setting.
+
+   The same palette as the dark sections already on the site (the
+   hero, the footer, the follow card), carried through the light
+   pages: green-black surfaces, paper text, the signal green for
+   accents. Every text colour clears WCAG AA on every surface, most
+   clear AAA. Screen only, so a printed rent receipt stays black on
+   white. The toggle in the header sets data-theme on <html> to
+   override the device; with no choice saved, the device decides.
+   ─────────────────────────────────────────────────────────────── */
+@media screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-cream: #121d17;
+    --color-card: #1c2a22;
+    --color-surface: #18251e;
+    --color-ink: #f2f0e8;
+    --color-body: #dce3dd;
+    --color-soft: #b9c6bd;
+    --color-muted: #93a798;
+    --color-green: #6fd39a;
+    --color-deep: #a6e8c2;
+    --color-mint: #15291f;
+    --color-mint-line: #26432f;
+    --color-line: #26332c;
+    --color-rule: #34443b;
+    --color-rose: #2b1a1a;
+    --color-rose-line: #4d2b2b;
+    --color-alert: #f29b9b;
+    --color-fill: #1f7a57;
+    --color-fill-deep: #176047;
+  }
+}
+
+/* The same, when the visitor picks dark with the toggle. Kept as a copy
+   rather than light-dark(), which older phones still in use here do not
+   understand. */
+@media screen {
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --color-cream: #121d17;
+    --color-card: #1c2a22;
+    --color-surface: #18251e;
+    --color-ink: #f2f0e8;
+    --color-body: #dce3dd;
+    --color-soft: #b9c6bd;
+    --color-muted: #93a798;
+    --color-green: #6fd39a;
+    --color-deep: #a6e8c2;
+    --color-mint: #15291f;
+    --color-mint-line: #26432f;
+    --color-line: #26332c;
+    --color-rule: #34443b;
+    --color-rose: #2b1a1a;
+    --color-rose-line: #4d2b2b;
+    --color-alert: #f29b9b;
+    --color-fill: #1f7a57;
+    --color-fill-deep: #176047;
+  }
 }
 
 body {
@@ -235,7 +308,7 @@ body {
   .btn-primary {
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 58%),
-      linear-gradient(135deg, #2a8d70 0%, var(--color-green) 48%, var(--color-deep) 100%);
+      linear-gradient(135deg, #2a8d70 0%, var(--color-fill) 48%, var(--color-fill-deep) 100%);
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.22);
     box-shadow:
@@ -252,7 +325,7 @@ body {
   /* Primary, on the dark sections: solid white. */
   .on-dark .btn-primary {
     background: linear-gradient(180deg, #ffffff, var(--color-paper) 56%, #dcd8cc 100%);
-    color: var(--color-ink);
+    color: var(--color-midnight);
     border-color: rgba(255, 255, 255, 0.65);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.95),
@@ -287,6 +360,40 @@ body {
     border-color: rgba(242, 240, 232, 0.45);
   }
 
+  /* In dark mode the light-page skins take the dark-section ones. */
+  @media screen and (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .btn-ghost {
+      background: linear-gradient(180deg, rgba(242, 240, 232, 0.13), rgba(242, 240, 232, 0.04));
+      border-color: rgba(242, 240, 232, 0.18);
+      color: var(--color-paper);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    }
+    :root:not([data-theme="light"]) .btn-ghost:hover {
+      border-color: rgba(242, 240, 232, 0.45);
+    }
+    :root:not([data-theme="light"]) .btn-primary {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.28),
+        0 10px 26px -12px rgba(0, 0, 0, 0.8);
+    }
+  }
+  @media screen {
+    :root[data-theme="dark"] .btn-ghost {
+      background: linear-gradient(180deg, rgba(242, 240, 232, 0.13), rgba(242, 240, 232, 0.04));
+      border-color: rgba(242, 240, 232, 0.18);
+      color: var(--color-paper);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    }
+    :root[data-theme="dark"] .btn-ghost:hover {
+      border-color: rgba(242, 240, 232, 0.45);
+    }
+    :root[data-theme="dark"] .btn-primary {
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.28),
+        0 10px 26px -12px rgba(0, 0, 0, 0.8);
+    }
+  }
+
   /* The arrow's own disc, for the split layout. */
   .btn .disc {
     display: flex;
@@ -297,9 +404,21 @@ body {
     justify-content: center;
     border-radius: 9999px;
     background: #fff;
-    color: var(--color-green);
+    color: var(--color-fill);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
     transition: transform 0.25s ease;
+  }
+  @media screen and (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .btn .disc {
+      background: var(--color-midnight);
+      color: var(--color-signal);
+    }
+  }
+  @media screen {
+    :root[data-theme="dark"] .btn .disc {
+      background: var(--color-midnight);
+      color: var(--color-signal);
+    }
   }
   .on-dark .btn .disc {
     background: var(--color-midnight);
@@ -356,9 +475,65 @@ body {
   }
 }
 
-/* Guide pages: keep the footer clear of the mobile download bar */
+/* Keep the footer clear of the mobile download bar on guides and the answer bar on calculators */
 @media (max-width: 767px) {
-  body:has(.sticky-download) footer {
+  body:has(.sticky-download) footer,
+  body:has(.sticky-answer) footer {
     padding-bottom: 6.5rem;
+  }
+}
+
+/* Shown only on paper: the date and link the print button adds. */
+.print-only {
+  display: none;
+}
+
+/* Calculators on paper: the inputs as they are set, the answer and how it
+   adds up, the assumptions and sources. No header, footer, answer bar,
+   sliders, quick picks or links onward. The rent receipts have their own. */
+@media print {
+  body:not(:has(.print-area)) header,
+  body:not(:has(.print-area)) footer,
+  body:not(:has(.print-area)) .sticky-answer,
+  body:not(:has(.print-area)) .no-print,
+  body:not(:has(.print-area)) input[type="range"],
+  body:not(:has(.print-area)) [role="group"][aria-label^="Common values"] {
+    display: none !important;
+  }
+  body:not(:has(.print-area)) .print-only {
+    display: block;
+  }
+  body:not(:has(.print-area)) main {
+    padding-top: 0;
+  }
+  body:not(:has(.print-area)) .how,
+  body:not(:has(.print-area)) .how li {
+    break-inside: avoid;
+  }
+}
+
+/* Rent receipts: print only the receipts, two to a page */
+@media print {
+  body:has(.print-area) * {
+    visibility: hidden;
+  }
+  body:has(.print-area) .print-area,
+  body:has(.print-area) .print-area * {
+    visibility: visible;
+  }
+  body:has(.print-area) header,
+  body:has(.print-area) footer,
+  body:has(.print-area) .sticky-answer {
+    display: none;
+  }
+  body:has(.print-area) .print-area {
+    position: absolute;
+    inset: 0 0 auto 0;
+    margin: 0;
+    display: block;
+  }
+  body:has(.print-area) .print-area > * {
+    margin-bottom: 1.5rem;
+    border-color: var(--color-soft);
   }
 }

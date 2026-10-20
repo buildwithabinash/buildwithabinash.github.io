@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>You are offline · Build with Abinash</title>
+<!--
+  Shown by the service worker for a page never opened while online. It is
+  one self-contained file on purpose: the site's own scripts for a page
+  that was never visited are not saved, so a normal page would fail here.
+-->
+<style>
+  :root { color-scheme: light dark; --bg: #faf8f3; --ink: #111111; --muted: #686860; --green: #1a6b54; --fill: #1a6b54; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #121d17; --ink: #f2f0e8; --muted: #93a798; --green: #6fd39a; --fill: #1f7a57; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px;
+    background: var(--bg); color: var(--ink); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; text-align: center; }
+  main { max-width: 520px; }
+  p.kicker { font-size: 11px; font-weight: 600; letter-spacing: .24em; text-transform: uppercase; color: var(--green); margin: 0; }
+  h1 { font-family: Georgia, "Times New Roman", serif; font-size: 36px; line-height: 1.12; margin: 12px 0 0; }
+  h1 em { font-weight: 400; color: var(--green); }
+  p.body { color: var(--muted); font-size: 16px; line-height: 1.6; margin: 16px 0 0; }
+  a { display: inline-block; margin-top: 28px; padding: 14px 24px; border-radius: 999px; background: var(--fill); color: #fff;
+    font-weight: 600; text-decoration: none; }
+  a:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="kicker">No connection</p>
+  <h1>You are <em>offline.</em></h1>
+  <p class="body">This page has not been opened on this device yet, so it is not saved. Any calculator or guide you have opened before still works without a connection.</p>
+  <a href="/tools/">Open the calculators</a>
+</main>
+</body>
+</html>

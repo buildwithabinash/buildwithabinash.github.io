@@ -8,6 +8,12 @@ export function Hero() {
   return (
     <section className="hero-spot on-dark -mt-[74px] text-paper md:-mt-[88px]">
       <Beams />
+      {/* Each portrait is shown at one size only. A plain priority image
+          downloads everywhere, even where it is hidden, so instead each is
+          preloaded early for the screens that show it, and lazy otherwise:
+          a hidden lazy image is never fetched. */}
+      <link rel="preload" as="image" href="/abinash-avatar.webp" media="(max-width: 767px)" fetchPriority="high" />
+      <link rel="preload" as="image" href="/abinash-portrait.webp" media="(min-width: 768px)" fetchPriority="high" />
 
       <div className="relative z-[2] mx-auto flex max-w-6xl flex-col px-5 pb-10 pt-[104px] md:min-h-[86vh] md:px-6 md:pb-12 md:pt-[150px]">
         <div className="flex flex-1 flex-col gap-10 md:flex-row md:items-center md:gap-14">
@@ -20,7 +26,7 @@ export function Hero() {
                   alt=""
                   width={260}
                   height={260}
-                  priority
+                  loading="lazy"
                   className="h-full w-full object-cover"
                 />
               </div>
@@ -74,13 +80,13 @@ export function Hero() {
                   alt="Abinash"
                   width={900}
                   height={900}
-                  priority
+                  loading="lazy"
                   className="h-full w-full object-cover"
                 />
               </div>
-              <div className="absolute -left-3 bottom-[18px] rounded-2xl bg-paper px-4 py-3 text-ink shadow-2xl">
+              <div className="absolute -left-3 bottom-[18px] rounded-2xl bg-paper px-4 py-3 text-midnight shadow-2xl">
                 <p className="font-serif text-[17px] font-bold">Abinash</p>
-                <p className="text-[13px] font-medium text-green">{site.handle}</p>
+                <p className="text-[13px] font-medium text-fill">{site.handle}</p>
               </div>
             </div>
           </div>
