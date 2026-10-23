@@ -457,6 +457,42 @@ export const guides: Guide[] = [
     disclaimerNote:
       "These are RBI rules for domestic transactions as of October 2026, and they can change. I am not a lawyer either. Check rbi.org.in or with your bank before acting.",
   },
+  {
+    slug: "fd-ladder",
+    tool: "fd-calculator",
+    topic: "Investing basics",
+    title: "Don't lock ₹3 lakh in one FD.",
+    titleEm: "Build a ladder instead.",
+    subtitle:
+      "A complete guide to FD laddering: real numbers, what an emergency costs, and how to set up your own ladder at the bank.",
+    blurb:
+      "Split ₹3 lakh into FDs of 1, 2 and 3 years and one matures every year, without breaking anything. The honest numbers, what an emergency in month 8 costs, and the one bank setting that makes or breaks the ladder.",
+    pdf: "/guides/fd-ladder.pdf",
+    pages: 10,
+    verified: "Oct 2026",
+    stats: [
+      { label: "Total", value: "₹3 lakh", accent: true },
+      { label: "Split into", value: "3 FDs" },
+      { label: "Tenures", value: "1 · 2 · 3 yrs" },
+      { label: "Matures", value: "Every year", accent: true },
+    ],
+    statsNote:
+      "Worked out at a large public-sector bank's October 2026 rates: 6.25% for 1 year, 6.40% for 2 years and 6.30% for 3 years, compounded quarterly, before tax.",
+    notice:
+      "A ladder is not a return trick. Breaking one ₹1 lakh FD in month 8 loses ₹580 of interest; breaking one ₹3 lakh FD loses ₹1,844.",
+    inside: [
+      { title: "The basic plan.", text: "₹3 lakh, three FDs, one maturity every year." },
+      { title: "Three things people get wrong.", text: "Returns, safety, and never breaking an FD." },
+      { title: "The ladder, year by year.", text: "How every rung rolls into a 3-year FD." },
+      { title: "Ladder vs one big FD.", text: "Normal years, and an emergency in month 8." },
+      { title: "Make it fit your life.", text: "The five dials: rungs, gaps, size, interest, banks." },
+      { title: "Set it up this week.", text: "Six steps, and the maturity setting most people miss." },
+      { title: "Tax, safety and good habits.", text: "TDS, Form 121 and the ₹5 lakh DICGC limit." },
+      { title: "The glossary, in plain words.", text: "Every term, with a line in Tanglish." },
+    ],
+    disclaimerNote:
+      "FD rates, penalties, tax rules and insurance limits change, and differ by bank. The figures are examples on stated assumptions, not promised returns. Check your bank's current terms before acting.",
+  },
 ];
 
 /**
