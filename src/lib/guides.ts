@@ -493,6 +493,41 @@ export const guides: Guide[] = [
     disclaimerNote:
       "FD rates, penalties, tax rules and insurance limits change, and differ by bank. The figures are examples on stated assumptions, not promised returns. Check your bank's current terms before acting.",
   },
+  {
+    slug: "card-insurance",
+    topic: "Loans and debt",
+    title: "Your debit card has free insurance.",
+    titleEm: "Only if you use it.",
+    subtitle:
+      "Which Indian debit and credit cards carry free accident insurance, how much, and the one rule that decides whether your family actually gets paid.",
+    blurb:
+      "Most debit cards, and many credit cards, carry free accident cover. The amounts card by card, bank by bank, checked against each bank's own site, and the activity rule that quietly switches the cover off.",
+    pdf: "/guides/card-insurance.pdf",
+    pages: 10,
+    verified: "Oct 2026",
+    stats: [
+      { label: "You pay", value: "₹0", accent: true },
+      { label: "RuPay Select", value: "₹10 lakh" },
+      { label: "RuPay rule", value: "30 days" },
+      { label: "Claim within", value: "90 days", accent: true },
+    ],
+    statsNote:
+      "For RuPay cards, the 30 days means one swipe, tap or online payment with the card itself before the accident. ATM withdrawals and UPI from the same account do not count.",
+    notice:
+      "A card left unused for three months may carry zero cover on the day it matters. And a cover your family doesn't know about pays nothing.",
+    inside: [
+      { title: "Which cards carry free insurance.", text: "Every bank's debit card cover on one page." },
+      { title: "SBI, HDFC and Kotak debit cards.", text: "Card-by-card amounts and the rule for each." },
+      { title: "Axis and ICICI debit cards.", text: "One covers by card type, one by account." },
+      { title: "The cover most people already have.", text: "RuPay, Jan Dhan and public sector banks." },
+      { title: "Credit cards.", text: "Mostly air accident cover, and the cards that dropped it." },
+      { title: "The rules that decide the claim.", text: "Activity rules, deadlines, and how a family claims." },
+      { title: "Treat it as a bonus.", text: "Five things to do this week." },
+      { title: "The glossary, in plain words.", text: "Every term, with a line in Tamil." },
+    ],
+    disclaimerNote:
+      "Card insurance is a group policy the bank chooses, and it can be changed or withdrawn at renewal. Figures were taken from official sites in October 2026. Confirm your card's current cover with your bank before relying on it.",
+  },
 ];
 
 /**
@@ -534,7 +569,7 @@ export const steps: Step[] = [
     title: "Insure the earner, not the investment",
     what: "Your own health cover, because the one from work ends the day the job does. Term cover only if somebody depends on your income. Nothing that promises returns.",
     why: "One hospital stay can undo years of saving, so this does not wait for the full six months. Insurance sold as investment pays badly at both jobs.",
-    guides: ["government-schemes"],
+    guides: ["government-schemes", "card-insurance"],
   },
   {
     id: "expensive-debt",
