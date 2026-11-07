@@ -528,6 +528,40 @@ export const guides: Guide[] = [
     disclaimerNote:
       "Card insurance is a group policy the bank chooses, and it can be changed or withdrawn at renewal. Figures were taken from official sites in October 2026. Confirm your card's current cover with your bank before relying on it.",
   },
+  {
+    slug: "tdfc-fixed-deposit",
+    tool: "fd-calculator",
+    topic: "Government schemes",
+    title: "₹1 lakh becomes ₹1.52 lakh",
+    titleEm: "in a Tamil Nadu govt company FD.",
+    subtitle:
+      "Everything about the TDFC Fixed Deposit: rates, real returns, how to apply, and the fine print.",
+    blurb:
+      "The Tamil Nadu government's own finance company pays more than a bank FD. What ₹1 lakh becomes, how to apply, and what is not insured.",
+    pdf: "/guides/tdfc-fixed-deposit.pdf",
+    pages: 9,
+    verified: null,
+    stats: [
+      { label: "Start with", value: "₹50,000", accent: true },
+      { label: "Tenure", value: "5 years" },
+      { label: "Senior rate", value: "8.5%" },
+      { label: "₹1 lakh becomes", value: "₹1.52 L", accent: true },
+    ],
+    statsNote:
+      "Senior citizen rate on the 60-month cumulative deposit, compounded every quarter, from the rates effective 24 August 2026. Before tax.",
+    notice:
+      "TDFC is owned by the Tamil Nadu government, but it is not a bank. The deposit has no DICGC insurance and RBI does not guarantee the company's finances. Low risk is not zero risk.",
+    inside: [
+      { title: "What your deposit becomes.", text: "₹50,000 to ₹10 lakh, over five years." },
+      { title: "The \"10.46% yield\" explained.", text: "Why it is not a yearly compound rate." },
+      { title: "Monthly income, or one lump sum.", text: "Both schemes, every rate, 12 to 60 months." },
+      { title: "Next to the Post Office and SCSS.", text: "Same ₹10 lakh, side by side." },
+      { title: "Applying, step by step.", text: "Documents, payment and the receipt by post." },
+      { title: "Closing early, tax and renewal.", text: "The rules that surprise people later." },
+    ],
+    disclaimerNote:
+      "TDFC deposits are not bank deposits and are not covered by DICGC insurance. Rates are those published on 24 August 2026 and can change, so confirm the current rate with TDFC before you pay.",
+  },
 ];
 
 /**
