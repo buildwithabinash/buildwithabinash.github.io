@@ -562,6 +562,42 @@ export const guides: Guide[] = [
     disclaimerNote:
       "TDFC deposits are not bank deposits and are not covered by DICGC insurance. Rates are those published on 24 August 2026 and can change, so confirm the current rate with TDFC before you pay.",
   },
+  {
+    slug: "short-term-money",
+    tool: "lumpsum-calculator",
+    topic: "Investing basics",
+    title: "Money you need soon",
+    titleEm: "needs a different home.",
+    subtitle:
+      "Where to park money for a few days, a few months or a few years, and why the time you have decides the fund you pick.",
+    blurb:
+      "A bonus waiting for a plan, an emergency fund, a down payment due next year. The options horizon by horizon, from liquid funds to equity, with real return ranges and the rules on exit load and tax.",
+    pdf: "/guides/short-term-money.pdf",
+    pages: 10,
+    verified: "Nov 2026",
+    stats: [
+      { label: "Liquid fund, 1Y avg", value: "6.3%", accent: true },
+      { label: "Savings account", value: "2.5 to 3%" },
+      { label: "Liquid exit load, day 7+", value: "Nil" },
+      { label: "Equity from", value: "3+ yrs", accent: true },
+    ],
+    statsNote:
+      "The liquid fund figure is the category's 1-year average for direct plans in early November 2026. Savings rates are the big banks' published rates for balances under ₹50 lakh.",
+    notice:
+      "The 9% to 10% often pitched for corporate bond funds is not what they have been paying. Over three years they returned about 6.9% to 7.9% a year, and over the last one only 3.6% to 5.8%.",
+    inside: [
+      { title: "The quick map.", text: "Five time horizons and the fund that fits each." },
+      { title: "A few days to a few weeks.", text: "Liquid funds, and what ₹1 lakh earns in 30 days." },
+      { title: "One to twelve months.", text: "Ultra short, money market and low duration funds." },
+      { title: "One to three years.", text: "Corporate bond funds and the interest rate catch." },
+      { title: "Above three years.", text: "When equity starts to make sense." },
+      { title: "Choosing a debt fund.", text: "Seven checks, from direct plans to portfolio quality." },
+      { title: "How the gains are taxed.", text: "Debt and equity funds, as of 2026-27." },
+      { title: "The glossary, in plain words.", text: "Every term, with a line in Tamil." },
+    ],
+    disclaimerNote:
+      "Mutual fund returns are not guaranteed, and the ranges here are past category data from early November 2026. Exit loads and tax rules can change. Read the scheme documents before investing.",
+  },
 ];
 
 /**
