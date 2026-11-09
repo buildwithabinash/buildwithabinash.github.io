@@ -598,6 +598,41 @@ export const guides: Guide[] = [
     disclaimerNote:
       "Mutual fund returns are not guaranteed, and the ranges here are past category data from early November 2026. Exit loads and tax rules can change. Read the scheme documents before investing.",
   },
+  {
+    slug: "post-office-schemes",
+    tool: "post-office-schemes",
+    topic: "Government schemes",
+    title: "5 Post Office schemes",
+    titleEm: "worth knowing.",
+    subtitle:
+      "Rates, limits, lock-ins and who each one suits. Updated for October to December 2026.",
+    blurb:
+      "All five Post Office schemes on one page: every rate, lock-in and limit, what each one actually pays, and how to open the account.",
+    pdf: "/guides/post-office-schemes.pdf",
+    pages: 9,
+    verified: null,
+    stats: [
+      { label: "Top rate", value: "8.2%", accent: true },
+      { label: "Start from", value: "₹250" },
+      { label: "MIS on ₹9 lakh", value: "₹5,550", accent: true },
+      { label: "Rates valid till", value: "31 Dec" },
+    ],
+    statsNote:
+      "Rates for 1 October to 31 December 2026, as notified by the Ministry of Finance. ₹250 is SSY's yearly minimum; the other four start at ₹1,000. ₹9 lakh in MIS pays ₹5,550 every month, before tax.",
+    notice:
+      "The two 8.2% schemes are not open to everyone. SCSS needs you to be 60 or older, and SSY is only for a girl child under 10. For everyone else, the best fixed rate here is NSC at 7.7%.",
+    inside: [
+      { title: "All five on one page.", text: "Rate, lock-in, minimum and maximum." },
+      { title: "A lump sum or a monthly income.", text: "Time Deposit and MIS, with every payout." },
+      { title: "The two 8.2% schemes.", text: "SCSS and SSY, and who can open them." },
+      { title: "What ₹1 lakh becomes in NSC.", text: "Year by year, at 7.7% compounded." },
+      { title: "Which one fits your goal.", text: "Pick by the job, then open the account." },
+      { title: "Tax, side by side.", text: "Section 123, TDS and what you keep." },
+      { title: "The glossary, in plain words.", text: "Every term, with a line in Tanglish." },
+    ],
+    disclaimerNote:
+      "Small savings rates are reset every quarter, so the rates here hold only till 31 December 2026. Check the current notification, and your own eligibility, before you deposit. Tax treatment depends on your regime and slab.",
+  },
 ];
 
 /**
