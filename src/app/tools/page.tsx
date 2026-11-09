@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbs, collectionSchema, graph } from "@/lib/schema";
-import { ogImage, site } from "@/lib/site";
+import { social } from "@/lib/site";
 import { modules, toolHref, tools } from "@/lib/tools";
 import { ToolsBrowser } from "./ToolsBrowser";
 
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Free calculators",
   description,
   alternates: { canonical: "/tools/" },
-  openGraph: { title: "Free calculators", description, url: `${site.url}/tools/`, images: [ogImage] },
+  ...social({ title: "Free calculators", description, path: "/tools/" }),
 };
 
 export default function ToolsPage() {

@@ -6,7 +6,7 @@ import { PrintButton } from "@/components/tools/PrintButton";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbs, graph, toolSchema } from "@/lib/schema";
 import { getModule, getTool, sourcesFor, toolHref, toolOgHref, tools, toolsForModule } from "@/lib/tools";
-import { reportErrorHref, shortDisclaimer, site } from "@/lib/site";
+import { reportErrorHref, shortDisclaimer, site, social } from "@/lib/site";
 
 export function generateStaticParams() {
   return tools.map((t) => ({ slug: t.slug }));
@@ -23,8 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title,
     description: t.blurb,
     alternates: { canonical: toolHref(t.slug) },
-    openGraph: { title, description: t.blurb, url: `${site.url}${toolHref(t.slug)}`, images: [image] },
-    twitter: { card: "summary_large_image", title, description: t.blurb, images: [image.url] },
+    ...social({ title, description: t.blurb, path: toolHref(t.slug), image }),
   };
 }
 

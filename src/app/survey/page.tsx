@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbs, graph, siteId } from "@/lib/schema";
-import { ogImage, site } from "@/lib/site";
+import { site, social } from "@/lib/site";
 import { SurveyForm } from "./SurveyForm";
 
 const description =
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "What should I cover next?",
   description,
   alternates: { canonical: "/survey/" },
-  openGraph: { title: "What should I cover next?", description, url: `${site.url}/survey/`, images: [ogImage] },
+  ...social({ title: "What should I cover next?", description, path: "/survey/" }),
 };
 
 const pageSchema = {

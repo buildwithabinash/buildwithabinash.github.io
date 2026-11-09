@@ -72,6 +72,43 @@ export const ogImage = {
   alt: `${site.name} · ${site.tagline}`,
 };
 
+/**
+ * The two social cards for a page, as one matched pair.
+ *
+ * Next replaces the whole openGraph and twitter objects rather than merging
+ * them with the root layout's, so a page that sets openGraph alone drops
+ * og:type, og:site_name and og:locale, and still ships the site-wide Twitter
+ * card with the wrong title and picture. Building both from one set of values
+ * keeps a page's two cards in step.
+ */
+export function social({
+  title,
+  description,
+  path,
+  image = ogImage,
+  type = "website",
+}: {
+  title: string;
+  description: string;
+  /** The page's own path, e.g. "/guides/sip/". */
+  path: string;
+  image?: typeof ogImage;
+  type?: "website" | "article";
+}) {
+  return {
+    openGraph: {
+      type,
+      siteName: site.name,
+      locale: "en_IN",
+      title,
+      description,
+      url: `${site.url}${path}`,
+      images: [image],
+    },
+    twitter: { card: "summary_large_image" as const, title, description, images: [image.url] },
+  };
+}
+
 export const socials: Social[] = [
   {
     id: "instagram",

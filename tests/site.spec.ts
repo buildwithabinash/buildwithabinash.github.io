@@ -292,3 +292,45 @@ test.describe("every guide", () => {
     });
   }
 });
+
+/*
+ * Next replaces the whole openGraph and twitter objects rather than merging
+ * them with the root layout's, so a page that sets one and not the other
+ * silently ships the site-wide card. Every page's two cards must agree, or a
+ * share on X shows the wrong title and picture.
+ */
+test.describe("social cards", () => {
+  const pages = [
+    "/",
+    "/guides/",
+    "/tools/",
+    "/about/",
+    "/survey/",
+    "/privacy/",
+    "/terms/",
+    ...guides.map((g) => guideHref(g.slug)),
+    ...tools.map((t) => toolHref(t.slug)),
+  ];
+  for (const path of pages) {
+    test(`${path} says the same thing to every network`, async ({ page }) => {
+      await page.goto(path);
+      const meta = async (sel: string) => page.locator(sel).first().getAttribute("content");
+      const card = await meta('meta[name="twitter:card"]');
+      expect(card, "no twitter:card").toBe("summary_large_image");
+      for (const [og, tw] of [
+        ["og:title", "twitter:title"],
+        ["og:description", "twitter:description"],
+        ["og:image", "twitter:image"],
+      ]) {
+        expect(await meta(`meta[name="${tw}"]`), `${tw} should match ${og}`).toBe(
+          await meta(`meta[property="${og}"]`),
+        );
+      }
+      // The pieces the root layout would otherwise supply, lost when a page
+      // sets its own openGraph.
+      expect(await meta('meta[property="og:site_name"]'), "og:site_name").toBe("Build with Abinash");
+      expect(await meta('meta[property="og:locale"]'), "og:locale").toBe("en_IN");
+      expect(await meta('meta[property="og:type"]'), "og:type").toMatch(/^(website|article)$/);
+    });
+  }
+});

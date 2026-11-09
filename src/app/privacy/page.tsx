@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/LegalPage";
-import { goatcounterCode, ogImage, site, surveyEndpoint } from "@/lib/site";
+import { goatcounterCode, site, social, surveyEndpoint } from "@/lib/site";
 
 const description =
   "What this site collects, which is very little: no accounts, no cookies, no ads. What stays on your device, what the survey sends, and how to reach me.";
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Privacy policy",
   description,
   alternates: { canonical: "/privacy/" },
-  openGraph: { title: "Privacy policy", description, url: `${site.url}/privacy/`, images: [ogImage] },
+  ...social({ title: "Privacy policy", description, path: "/privacy/" }),
 };
 
 export default function PrivacyPage() {

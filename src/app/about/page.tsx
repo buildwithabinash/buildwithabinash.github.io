@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbs, graph, personId, siteId } from "@/lib/schema";
-import { disclaimer, ogImage, site, socials } from "@/lib/site";
+import { disclaimer, site, social, socials } from "@/lib/site";
 
 const description =
   "Who Abinash is, why @buildwithabinash exists, and the five rules every guide follows. Education, not advice.";
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "About",
   description,
   alternates: { canonical: "/about/" },
-  openGraph: { title: "About", description, url: `${site.url}/about/`, images: [ogImage] },
+  ...social({ title: "About", description, path: "/about/" }),
 };
 
 const aboutSchema = {

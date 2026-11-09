@@ -6,7 +6,7 @@ import { Download, Search } from "@/components/Icons";
 import { JsonLd } from "@/components/JsonLd";
 import { breadcrumbs, graph, guideSchema } from "@/lib/schema";
 import { type Guide, coverHref, getGuide, guideHref, guideOgHref, guides, relatedGuides } from "@/lib/guides";
-import { instagram, reportErrorHref, site } from "@/lib/site";
+import { instagram, reportErrorHref, site, social } from "@/lib/site";
 import { getTool, toolHref } from "@/lib/tools";
 import { StickyBar } from "./StickyBar";
 
@@ -26,13 +26,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title,
     description: g.subtitle,
     alternates: { canonical: guideHref(g.slug) },
-    openGraph: {
-      type: "article",
+    ...social({
       title,
       description: g.subtitle,
-      url: `${site.url}${guideHref(g.slug)}`,
-      images: [{ url: guideOgHref(g.slug), width: 1200, height: 630, alt: full }],
-    },
+      path: guideHref(g.slug),
+      type: "article",
+      image: { url: guideOgHref(g.slug), width: 1200, height: 630, alt: full },
+    }),
   };
 }
 

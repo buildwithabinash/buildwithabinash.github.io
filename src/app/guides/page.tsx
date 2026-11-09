@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { JsonLd } from "@/components/JsonLd";
 import { guideHref, guides } from "@/lib/guides";
 import { breadcrumbs, collectionSchema, graph } from "@/lib/schema";
-import { ogImage, site } from "@/lib/site";
+import { social } from "@/lib/site";
 import { GuidesBrowser } from "./GuidesBrowser";
 
 const description =
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "Free guides",
   description,
   alternates: { canonical: "/guides/" },
-  openGraph: { title: "Free guides", description, url: `${site.url}/guides/`, images: [ogImage] },
+  ...social({ title: "Free guides", description, path: "/guides/" }),
 };
 
 export default function GuidesPage() {

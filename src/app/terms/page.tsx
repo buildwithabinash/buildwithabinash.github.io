@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/LegalPage";
-import { ogImage, site } from "@/lib/site";
+import { site, social } from "@/lib/site";
 
 const description =
   "The terms for using the free guides and calculators: education only, not advice, numbers that are estimates, and how the PDFs can be shared.";
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: "Terms of use",
   description,
   alternates: { canonical: "/terms/" },
-  openGraph: { title: "Terms of use", description, url: `${site.url}/terms/`, images: [ogImage] },
+  ...social({ title: "Terms of use", description, path: "/terms/" }),
 };
 
 export default function TermsPage() {
