@@ -633,6 +633,40 @@ export const guides: Guide[] = [
     disclaimerNote:
       "Small savings rates are reset every quarter, so the rates here hold only till 31 December 2026. Check the current notification, and your own eligibility, before you deposit. Tax treatment depends on your regime and slab.",
   },
+  {
+    slug: "home-loan-charges",
+    tool: "home-loan",
+    topic: "Loans and debt",
+    title: "Your 8% home loan",
+    titleEm: "may really cost 8.6%.",
+    subtitle:
+      "Two things to ask your bank before you sign: the Key Fact Statement and the APR.",
+    blurb:
+      "The rate is only part of the bill. The 15 charges that sit around it, the one RBI document that has to list all of them, and the one number that shows what the loan really costs.",
+    pdf: "/guides/home-loan-charges.pdf",
+    pages: 8,
+    verified: "Nov 2026",
+    stats: [
+      { label: "Rate quoted", value: "8.00%" },
+      { label: "Upfront costs", value: "₹1.34 lakh" },
+      { label: "Real cost (APR)", value: "8.62%", accent: true },
+      { label: "Things to ask", value: "2", accent: true },
+    ],
+    statsNote:
+      "An example ₹30 lakh loan for 20 years at 8%, with a 0.5% processing fee, legal, valuation and documentation charges, GST and a ₹1 lakh single premium insurance. Not any specific bank's charges.",
+    notice:
+      "Since 1 October 2024 every home loan comes with a Key Fact Statement. A fee that is not in it cannot be charged at any stage of the loan without your explicit consent.",
+    inside: [
+      { title: "Where the charges hide.", text: "15 charges, and when each one hits." },
+      { title: "The Key Fact Statement.", text: "What RBI's rule says and what the sheet shows." },
+      { title: "APR, the rate after the charges.", text: "₹30 lakh at 8%, worked out to 8.62%." },
+      { title: "Reading your KFS.", text: "Seven checks and three questions for the branch." },
+      { title: "Your rights during the loan.", text: "Prepayment, penal charges, receipts and complaints." },
+      { title: "The glossary, in plain words.", text: "Every term, with a line in Tamil." },
+    ],
+    disclaimerNote:
+      "The example uses assumed charges, not any lender's actual fees. Charges and rules differ between lenders and can change, so read your own KFS and loan agreement before you sign.",
+  },
 ];
 
 /**
@@ -688,7 +722,7 @@ export const steps: Step[] = [
     title: "Know the real price before you buy",
     what: "On-road, not ex-showroom. Interest over the full tenure, not the monthly number the salesperson leads with.",
     why: "The big purchases of your twenties set your fixed costs for years. A loan taken casually quietly decides how much you can invest later.",
-    guides: ["bike-on-road-price", "bank-auction-car", "car-cash-vs-emi", "car-tcs-refund"],
+    guides: ["bike-on-road-price", "bank-auction-car", "car-cash-vs-emi", "car-tcs-refund", "home-loan-charges"],
   },
   {
     id: "invest",
