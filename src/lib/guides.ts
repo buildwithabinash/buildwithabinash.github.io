@@ -666,6 +666,39 @@ export const guides: Guide[] = [
     ],
     disclaimerNote:
       "The example uses assumed charges, not any lender's actual fees. Charges and rules differ between lenders and can change, so read your own KFS and loan agreement before you sign.",
+  },  {
+    slug: "post-office-mis",
+    tool: "post-office-schemes",
+    topic: "Government schemes",
+    title: "₹9,250 every month,",
+    titleEm: "from the post office.",
+    subtitle:
+      "The full numbers behind the Post Office Monthly Income Scheme, the rules that decide what you get, and how to open one.",
+    blurb:
+      "The Post Office MIS from the video, checked: where the ₹9,250 comes from, what smaller amounts pay, single or joint, tax by slab, early exit and the paperwork.",
+    pdf: "/guides/post-office-mis.pdf",
+    pages: 8,
+    verified: "Nov 2026",
+    stats: [
+      { label: "Deposit", value: "₹15 lakh" },
+      { label: "Rate", value: "7.4%" },
+      { label: "Lock-in", value: "5 yrs" },
+      { label: "Every month", value: "₹9,250", accent: true },
+    ],
+    statsNote:
+      "A joint account at the ₹15 lakh maximum, at the 7.4% rate for October to December 2026. Simple interest paid out monthly, before tax. A single account stops at ₹9 lakh, which pays ₹5,550 a month.",
+    notice:
+      "The ₹9,250 is interest only, and it is taxed at your slab rate. Your ₹15 lakh stays locked for 5 years and comes back in one piece at the end.",
+    inside: [
+      { title: "The numbers from the video.", text: "Where the ₹9,250 comes from, claim by claim." },
+      { title: "The rules, on one page.", text: "Limits, payouts, tenure and who can open one." },
+      { title: "What you get at your amount.", text: "From ₹1,000 to ₹15 lakh, and single or joint." },
+      { title: "Opening MIS, step by step.", text: "What to carry and the six steps at the counter." },
+      { title: "Tax and early exit.", text: "What you keep at each slab, and the closing cost." },
+      { title: "The glossary, in plain words.", text: "Every term, with a line in Tanglish." },
+    ],
+    disclaimerNote:
+      "Small savings rates are reviewed every quarter, so the 7.4% here holds for October to December 2026. Check the current rate at your post office before you deposit. Tax depends on your slab.",
   },
 ];
 
@@ -729,7 +762,7 @@ export const steps: Step[] = [
     title: "Then invest. Monthly, and boring.",
     what: "A fixed amount on a fixed date into something diversified, for money you will not need for seven years or more. Raise it whenever your income rises.",
     why: "This is step six, not step one. Started here it compounds quietly for decades, and your early years are the ones with the most time in them.",
-    guides: ["sip", "step-up-sip", "ppf-nps-nsc", "nps-complete", "investing-for-your-child", "ssy", "kvp", "rbi-floating-rate-bond", "govt-monthly-income", "business-schemes"],
+    guides: ["sip", "step-up-sip", "ppf-nps-nsc", "nps-complete", "investing-for-your-child", "ssy", "kvp", "rbi-floating-rate-bond", "govt-monthly-income", "post-office-mis", "business-schemes"],
   },
   {
     id: "spot-a-scam",
