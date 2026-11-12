@@ -700,6 +700,40 @@ export const guides: Guide[] = [
     disclaimerNote:
       "Small savings rates are reviewed every quarter, so the 7.4% here holds for October to December 2026. Check the current rate at your post office before you deposit. Tax depends on your slab.",
   },
+  {
+    slug: "property-documents",
+    tool: "home-loan",
+    topic: "Buying smart",
+    title: "Buying land or a house?",
+    titleEm: "Check these papers first.",
+    subtitle:
+      "Every document you need in Tamil Nadu, for a plot, a flat or a house you build yourself, and how to check each one.",
+    blurb:
+      "The property papers guide for Tamil Nadu: Patta, EC and parent documents, DTCP, CMDA and RERA, building your own house, registration costs and a checklist to carry.",
+    pdf: "/guides/property-documents.pdf",
+    pages: 12,
+    verified: "Nov 2026",
+    stats: [
+      { label: "Stamp duty", value: "7%" },
+      { label: "Registration", value: "2%" },
+      { label: "History to check", value: "30 yrs", accent: true },
+      { label: "RERA needed above", value: "500 m²" },
+    ],
+    statsNote:
+      "Tamil Nadu rates, charged on the guideline value or the deed price, whichever is higher. On a ₹50 lakh property that is ₹4,50,000 to keep aside. RERA applies to projects on more than 500 sq m with more than 8 units.",
+    notice:
+      "The name on the Patta, the name on the seller's sale deed and the person signing your deed should be the same. If they are not, stop and ask why before you pay even a token advance.",
+    inside: [
+      { title: "Three pairs of words people mix up.", text: "Patta and Chitta, sale and title deed, DTCP and RERA." },
+      { title: "Land records and ownership.", text: "Checking Patta online, the 30-year chain and reading an EC." },
+      { title: "Plots, new flats and resale homes.", text: "The approvals and papers to ask for in each case." },
+      { title: "Building your own house.", text: "Permits before the first brick, papers after the last." },
+      { title: "Registration day and after.", text: "Stamp duty, fees, the women's concession and Patta transfer." },
+      { title: "The checklist and glossary.", text: "A page to print, and every term with a line in Tanglish." },
+    ],
+    disclaimerNote:
+      "Property rules, rates and portals in Tamil Nadu change often, and these are as of November 2026. Get a property lawyer's title opinion and check with the Sub-Registrar office, your planning authority and TNRERA before you pay or sign.",
+  },
 ];
 
 /**
@@ -755,7 +789,7 @@ export const steps: Step[] = [
     title: "Know the real price before you buy",
     what: "On-road, not ex-showroom. Interest over the full tenure, not the monthly number the salesperson leads with.",
     why: "The big purchases of your twenties set your fixed costs for years. A loan taken casually quietly decides how much you can invest later.",
-    guides: ["bike-on-road-price", "bank-auction-car", "car-cash-vs-emi", "car-tcs-refund", "home-loan-charges"],
+    guides: ["bike-on-road-price", "bank-auction-car", "car-cash-vs-emi", "car-tcs-refund", "home-loan-charges", "property-documents"],
   },
   {
     id: "invest",
