@@ -734,6 +734,39 @@ export const guides: Guide[] = [
     disclaimerNote:
       "Property rules, rates and portals in Tamil Nadu change often, and these are as of November 2026. Get a property lawyer's title opinion and check with the Sub-Registrar office, your planning authority and TNRERA before you pay or sign.",
   },
+  {
+    slug: "nannilam-land-scheme",
+    topic: "Government schemes",
+    title: "Up to ₹5 lakh to buy farm land,",
+    titleEm: "in a woman's name.",
+    subtitle:
+      "A plain guide to Tamil Nadu's Nannilam Magalir Nila Udamai Thittam: who it is for, what you actually get, and how to apply.",
+    blurb:
+      "The Nannilam land scheme guide: who qualifies, the subsidy worked out in rupees, the rules on the land, the papers and how to apply.",
+    pdf: "/guides/nannilam-land-scheme.pdf",
+    pages: 10,
+    verified: "Nov 2026",
+    stats: [
+      { label: "Subsidy", value: "50%", accent: true },
+      { label: "Max per family", value: "₹5 lakh", accent: true },
+      { label: "Stamp duty", value: "₹0" },
+      { label: "Lock-in", value: "10 yrs" },
+    ],
+    statsNote:
+      "The government pays the lower of 50% of the land cost or ₹5 lakh, and waives stamp duty and the registration fee. On ₹10 lakh of land that is ₹5,00,000 from the scheme and ₹70,000 of stamp duty you don't pay.",
+    notice:
+      "It is only for landless SC and ST women who work in agriculture, with family income up to ₹3 lakh. It covers farm land, not a house or a city plot, and you still pay the other half yourself.",
+    inside: [
+      { title: "What the scheme is.", text: "A land subsidy run by TAHDCO, and how it changed from the old 30% version." },
+      { title: "Who can apply.", text: "Every eligibility rule, including the 5-year land sale rule that catches people." },
+      { title: "What you actually get.", text: "The subsidy at five land prices, and why ₹10 lakh is the sweet spot." },
+      { title: "The real return.", text: "What you gain on ₹10 lakh of land, and the costs people forget." },
+      { title: "Rules on the land.", text: "Land type and extent, the seller rule, sole name and the 10-year lock-in." },
+      { title: "Papers and how to apply.", text: "Two checklists, the online steps and who to contact, plus a glossary." },
+    ],
+    disclaimerNote:
+      "Scheme rules, limits, fund allocations and application windows are set by the Government of Tamil Nadu and can change, and some details differ between districts. These are as of November 2026. Get the land title checked by a lawyer and confirm every condition with the TAHDCO District Manager's office before you pay or sign.",
+  },
 ];
 
 /**
